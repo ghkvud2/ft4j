@@ -6,7 +6,7 @@ public interface Marshaller {
 
 	boolean supports(AnnotationFieldProperty property);
 
-	String marshall(AnnotationFieldProperty property);
+	byte[] marshall(AnnotationFieldProperty property);
 
 	String convertWithCharset(String input);
 }

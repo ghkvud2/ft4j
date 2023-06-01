@@ -6,5 +6,5 @@ public interface ValidatorManager {
 
 	void preValidate(AnnotationFieldProperty property);
 
-	void postValidate(AnnotationFieldProperty property, String result);
+	void postValidate(AnnotationFieldProperty property, byte[] bytes);
 }

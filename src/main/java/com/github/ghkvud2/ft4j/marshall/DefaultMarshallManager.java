@@ -1,5 +1,7 @@
 package com.github.ghkvud2.ft4j.marshall;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class DefaultMarshallManager implements MarshallManager {
 	}
 
 	@Override
-	public String marshall(Object obj) {
+	public byte[] marshall(Object obj) {
 
 		try {
 			return process(obj);
@@ -36,14 +38,22 @@ public class DefaultMarshallManager implements MarshallManager {
 			throw e;
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
 		} finally {
 			GeneratorCache.clearCache();
 		}
 	}
 
-	private String process(Object obj) throws IllegalArgumentException, IllegalAccessException {
-		StringBuilder sb = new StringBuilder();
-
+	private byte[] process(Object obj) throws IllegalArgumentException, IllegalAccessException, IOException,
+			NoSuchMethodException, SecurityException, InvocationTargetException {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		List<Field> fields = AnnotationUtils.getDeclaredFieldsOrdering(obj);
 
 		for (Field field : fields) {
@@ -59,20 +69,22 @@ public class DefaultMarshallManager implements MarshallManager {
 			if (fieldType.isPrimitive() || fieldType.equals(String.class)) {
 				AnnotationFieldProperty property = propertyFactory.createProperty(obj, field);
 				validatorManager.preValidate(property);
-				String result = marshaller.marshall(property);
+				byte[] bytes = marshaller.marshall(property);
 				field.set(obj, property.getFieldValue());
-				validatorManager.postValidate(property, result);
-				sb.append(result);
+				validatorManager.postValidate(property, bytes);
+				outputStream.write(bytes);
 			} else {
 				Object newObject = field.get(obj);
+
 				if (newObject == null) {
 					newObject = createObject(fieldType);
 				}
-				sb.append(process(newObject));
+
+				field.set(obj, newObject);
+				outputStream.write(process(newObject));
 			}
 		}
-		log.info("result={}", marshaller.convertWithCharset(sb.toString()));
-		return marshaller.convertWithCharset(sb.toString());
+		return outputStream.toByteArray();
 	}
 
 	private Object createObject(Class<?> fieldType) {

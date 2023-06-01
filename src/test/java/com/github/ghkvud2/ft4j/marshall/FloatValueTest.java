@@ -1,5 +1,6 @@
 package com.github.ghkvud2.ft4j.marshall;
 
+import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,16 +15,21 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.DefaultValueExceedsLimitException;
 import com.github.ghkvud2.ft4j.exception.FieldValueExceedsLimitException;
+import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
+import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("Marshall - @FloatValue 테스트")
 public class FloatValueTest {
 
 	private MarshallManager marshaller;
+	private ConverterType type;
 
 	@BeforeEach
 	void setUp() {
-		marshaller = MarshallFactory.builder().converter(ConverterType.EUC_KR).build();
+		type = ConverterType.EUC_KR;
+		marshaller = MarshallFactory.builder().converter(type).build();
 	}
+
 
 	@DisplayName("length 속성")
 	@Nested
@@ -35,8 +41,8 @@ public class FloatValueTest {
 				"12345.67, 0012345.67", "12345.9, 00012345.9" })
 		void field_equal_or_less__than_length(float input, String expected) {
 			Bank bank = new Bank(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("field length > length property and ignoreLimit=false, exception")
@@ -51,9 +57,9 @@ public class FloatValueTest {
 		@ParameterizedTest(name = "when length=7, input={0} then expected={1}")
 		@CsvSource(value = { "12345.67890, 12345.6", "12.34567, 12.3456" })
 		void ignore_limit(float input, String expected) {
-			Bank3 product = new Bank3(input);
-			String result = marshaller.marshall(product);
-			assertEquals(expected, result);
+			Bank3 bank = new Bank3(input);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		class Bank {
@@ -111,8 +117,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "123.4, 000123.400", "1.2, 000001.200", "12.3, 000012.300", "12.34, 000012.340" })
 		void fractional_length_test(float input, String expected) {
 			Bank bank = new Bank(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("input의 소수점 자릿수 = fractionLength ")
@@ -120,8 +126,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "1.234, 000001.234", "12.345, 000012.345", "123.456, 000123.456" })
 		void fractional_length_eqauls_test(float input, String expected) {
 			Bank bank = new Bank(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("input의 소수점 자릿수 > fractionLength ")
@@ -129,8 +135,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "1.2345, 000001.234", "12.3456, 000012.345", "123.4567, 000123.456" })
 		void fractional_length_grathar_test(float input, String expected) {
 			Bank bank = new Bank(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("fractionLength가 0일 때")
@@ -138,8 +144,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "1234.39f, 0001234", "1234.93f, 0001234", "1f, 0000001" })
 		void fractional_is_zero_test(float input, String expected) {
 			Bank2 bank = new Bank2(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		class Bank {
@@ -185,8 +191,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "1.1, 000002.933" })
 		void defaultValue_less_than_length(float input, String expected) {
 			Bank bank = new Bank(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("defaultValue length = length")
@@ -194,8 +200,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "1.1, 2.933", "9.999, 2.933" })
 		void defaultValue_equals_length(float input, String expected) {
 			Bank2 bank = new Bank2(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("when defaultValue length > length, then exception")
@@ -264,8 +270,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "1.2, 00000001.2", "12.3, 00000012.3", "123.4, 00000123.4", "1234.5, 00001234.5" })
 		void default_padding(float input, String expected) {
 			Bank bank = new Bank(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("space padding byte")
@@ -273,8 +279,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "1.2, '       1.2'", "12.3, '      12.3'", "123.4, '     123.4'", "1234.5, '    1234.5'" })
 		void zero_padding(float input, String expected) {
 			Bank3 bank = new Bank3(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("when double field length = length, then padding byte no effects")
@@ -282,8 +288,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "12.34, 12.34", "1.999, 1.999" })
 		void double_field_length_equals_to_length(float input, String expected) {
 			Bank4 bank = new Bank4(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		class Bank {
@@ -337,8 +343,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "12.3, 00000012.3", "12.99, 0000012.99" })
 		void right_justify_test(float input, String expected) {
 			Bank bank = new Bank(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("LEFT")
@@ -346,8 +352,8 @@ public class FloatValueTest {
 		@CsvSource(value = { "12.3, 12.3000000", "12.99, 12.9900000" })
 		void left_justify_test(float input, String expected) {
 			Bank2 bank = new Bank2(input);
-			String result = marshaller.marshall(bank);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(bank);
+			assertEquals(expected, convert(result, type));
 		}
 
 		class Bank {

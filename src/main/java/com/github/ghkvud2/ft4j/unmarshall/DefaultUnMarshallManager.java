@@ -24,6 +24,7 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 		try {
 
 			Constructor<T> constructor = clazz.getDeclaredConstructor();
+			constructor.setAccessible(true);
 			T obj = constructor.newInstance();
 			byte[] bytes = unMarshaller.convertToBytes(input);
 			process(bytes, 0, obj);

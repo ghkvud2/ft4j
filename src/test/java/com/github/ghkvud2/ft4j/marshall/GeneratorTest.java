@@ -1,5 +1,6 @@
 package com.github.ghkvud2.ft4j.marshall;
 
+import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
@@ -12,27 +13,32 @@ import com.github.ghkvud2.ft4j.annotation.Order;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.*;
 import com.github.ghkvud2.ft4j.generator.Generator;
+import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
+import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("@GeneratedValue 어노테이션")
 public class GeneratorTest {
 
 	private MarshallManager marshaller;
 	protected static String uuid;
+	private ConverterType type;
 	boolean first;
-	String memory;
+	byte[] memory;
 
 	@BeforeEach
 	void setUp() {
+		type = ConverterType.EUC_KR;
 		first = true;
 		memory = null;
-		marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+		marshaller = MarshallFactory.builder().converter(type).build();
 	}
 
 	@DisplayName("Generator만 설정했을 때")
 	@Test
 	void generator_test() {
 		TestClass testClass = new TestClass();
-		assertEquals(marshaller.marshall(testClass), testClass.uuid);
+		byte[] result = marshaller.marshall(testClass);
+		assertEquals(convert(result, type), testClass.uuid);
 	}
 
 	@DisplayName("generated value length > length property")
@@ -46,8 +52,8 @@ public class GeneratorTest {
 	@Test
 	void cacheable_test() {
 		TestClass3 testClass = new TestClass3();
-		String result = marshaller.marshall(testClass);
-		assertEquals(result, testClass.uuid + testClass.uuid2);
+		byte[] result = marshaller.marshall(testClass);
+		assertEquals(convert(result, type), testClass.uuid + testClass.uuid2);
 		assertEquals(testClass.uuid, testClass.uuid2);
 	}
 
@@ -55,8 +61,8 @@ public class GeneratorTest {
 	@Test
 	void not_cacheable_test() {
 		TestClass4 testClass = new TestClass4();
-		String result = marshaller.marshall(testClass);
-		assertEquals(result, testClass.uuid + testClass.uuid2);
+		byte[] result = marshaller.marshall(testClass);
+		assertEquals(convert(result, type), testClass.uuid + testClass.uuid2);
 		assertNotEquals(testClass.uuid, testClass.uuid2);
 	}
 
@@ -86,14 +92,14 @@ public class GeneratorTest {
 
 				@Override
 				public void run() {
-					String result = marshaller.marshall(testClass);
-					assertNotEquals(memory, result);
+					byte[] result = marshaller.marshall(testClass);
+					assertNotEquals(convert(memory, type), convert(result, type));
 					
 					if (first) {
 						first = false;
 						memory = result;
 					}
-					assertEquals(result, testClass.uuid + testClass.uuid2);
+					assertEquals(convert(result, type), testClass.uuid + testClass.uuid2);
 					assertEquals(testClass.uuid, testClass.uuid2);
 				}
 			};

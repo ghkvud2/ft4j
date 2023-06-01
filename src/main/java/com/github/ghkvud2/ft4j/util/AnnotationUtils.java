@@ -17,7 +17,7 @@ public class AnnotationUtils {
 			
 			if (!field.isAnnotationPresent(Order.class)) {
 				throw new MissingOrderAnnotationException(
-						String.format("Field %s is missing the Order annotation.", field.getName()));
+						String.format("Field '%s' is missing the Order annotation.", field.getName()));
 			}
 			Order annotation = field.getDeclaredAnnotation(Order.class);
 			return annotation.value();

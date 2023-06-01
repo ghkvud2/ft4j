@@ -62,7 +62,7 @@ public class ByteValidatorManager implements ValidatorManager {
 	}
 
 	@Override
-	public void postValidate(AnnotationFieldProperty property, String result) {
+	public void postValidate(AnnotationFieldProperty property, byte[] bytes) {
 
 		boolean isSupported = false;
 		for (PropertyValidator validator : validators) {
@@ -71,7 +71,7 @@ public class ByteValidatorManager implements ValidatorManager {
 			}
 			isSupported = true;
 			int expectedLength = property.length();
-			int actualLength = result.getBytes(converter.getCharset()).length;
+			int actualLength = bytes.length;
 
 			if (expectedLength != actualLength) {
 				throw new LengthMismatchException(String.format("Field %s mismatch length. actual length is %d.",

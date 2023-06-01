@@ -22,7 +22,7 @@ public class ByteBasedMarshaller implements Marshaller {
 	}
 
 	@Override
-	public String marshall(AnnotationFieldProperty property) {
+	public byte[] marshall(AnnotationFieldProperty property) {
 
 		int limit = property.length();
 		PaddingByte paddingByte = property.padding();
@@ -47,7 +47,8 @@ public class ByteBasedMarshaller implements Marshaller {
 		if (originLen < limit) {
 			Arrays.fill(newBytes, start, end, paddingByte.getValue());
 		}
-		return new String(newBytes, converter.getCharset());
+		return newBytes;
+//		return new String(newBytes, converter.getCharset());
 	}
 
 	@Override

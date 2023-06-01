@@ -1,6 +1,9 @@
 package com.github.ghkvud2.ft4j.nested;
 
+import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,19 +21,21 @@ public class NestedTest {
 	private MarshallManager marshaller;
 	private UnMarshallManager unMarshaller;
 	private User input;
+	private ConverterType type;
 
 	@BeforeEach
 	void setUp() {
-		marshaller = MarshallFactory.builder().converter(ConverterType.EUC_KR).build();
-		unMarshaller = UnMarshallFactory.builder().converter(ConverterType.EUC_KR).build();
+		type = ConverterType.EUC_KR;
+		marshaller = MarshallFactory.builder().converter(type).build();
+		unMarshaller = UnMarshallFactory.builder().converter(type).build();
 		Address address = new Address("서울특별시", "양천구", "신월동");
 		input = new User("홍길동", 34, "honggil@gmail.com", address);
 	}
 
 	@Test
 	void nested() {
-		String result = marshaller.marshall(input);
-		User expected = unMarshaller.unmarshall(result, User.class);
+		byte[] result = marshaller.marshall(input);
+		User expected = unMarshaller.unmarshall(convert(result, type), User.class);
 		assertObject(expected, input);
 	}
 

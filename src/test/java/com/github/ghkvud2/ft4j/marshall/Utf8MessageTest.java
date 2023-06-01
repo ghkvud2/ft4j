@@ -1,5 +1,6 @@
 package com.github.ghkvud2.ft4j.marshall;
 
+import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -13,15 +14,20 @@ import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.DefaultValueExceedsLimitException;
+import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
+import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("Marshall - @Message 어노테이션 UTF-8")
 public class Utf8MessageTest {
 
 	private MarshallManager marshaller;
 
+	private ConverterType type;
+
 	@BeforeEach
 	void setUp() {
-		marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+		type = ConverterType.UTF_8;
+		marshaller = MarshallFactory.builder().converter(type).build();
 	}
 
 	@DisplayName("length 속성")
@@ -34,8 +40,8 @@ public class Utf8MessageTest {
 				"1234567890, 1234567890", "가나다1, 가나다1" })
 		void field_equal_or_less__than_length(String input, String expected) {
 			User user = new User(input);
-			String result = marshaller.marshall(user);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("field length > length property")
@@ -43,8 +49,8 @@ public class Utf8MessageTest {
 		@CsvSource(value = { "1234567890123, 1234567890", "ABCDEFGHIJKLMN, ABCDEFGHIJ", "가나다라, '가나다 '", "가나다123,가나다1" })
 		void field_grater_than_length(String input, String expected) {
 			User user = new User(input);
-			String result = marshaller.marshall(user);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals(expected, convert(result, type));
 		}
 
 		class User {
@@ -66,8 +72,8 @@ public class Utf8MessageTest {
 		@Test
 		void defaultValue_less_than_length() {
 			User user = new User("test");
-			String result = marshaller.marshall(user);
-			assertEquals("가나다      ", result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals("가나다      ", convert(result, type));
 		}
 
 		@DisplayName("default value length > length property then exception")
@@ -81,8 +87,8 @@ public class Utf8MessageTest {
 		@Test
 		void defaultValue_eqauls_to_length() {
 			User3 user = new User3("test");
-			String result = marshaller.marshall(user);
-			assertEquals("가나다라마", result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals("가나다라마", convert(result, type));
 		}
 
 		class User {
@@ -126,8 +132,8 @@ public class Utf8MessageTest {
 		@CsvSource(value = { "1, '1    '", "12, '12   '" })
 		void default_padding(String input, String expected) {
 			User user = new User(input);
-			String result = marshaller.marshall(user);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("default padding byte")
@@ -135,8 +141,8 @@ public class Utf8MessageTest {
 		@CsvSource(value = { "1, 10000", "12, 12000" })
 		void zero_padding(String input, String expected) {
 			User2 user = new User2(input);
-			String result = marshaller.marshall(user);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("when field length = length, then padding byte no effects")
@@ -144,8 +150,8 @@ public class Utf8MessageTest {
 		@CsvSource(value = { "12345, 12345" })
 		void field_length_equals_to_length(String input, String expected) {
 			User user = new User(input);
-			String result = marshaller.marshall(user);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals(expected, convert(result, type));
 		}
 
 		class User {
@@ -178,8 +184,8 @@ public class Utf8MessageTest {
 		@CsvSource(value = { "1, '1         '", "12345, '12345     '" })
 		void left_justify_test(String input, String expected) {
 			User user = new User(input);
-			String result = marshaller.marshall(user);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals(expected, convert(result, type));
 		}
 
 		@DisplayName("RIGHT")
@@ -187,8 +193,8 @@ public class Utf8MessageTest {
 		@CsvSource(value = { "1, '         1'", "12345, '     12345'" })
 		void right_justify_test(String input, String expected) {
 			User2 user = new User2(input);
-			String result = marshaller.marshall(user);
-			assertEquals(expected, result);
+			byte[] result = marshaller.marshall(user);
+			assertEquals(expected, convert(result, type));
 		}
 
 		class User {

@@ -1,5 +1,6 @@
 package com.github.ghkvud2.ft4j.unmarshall;
 
+import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.*;
@@ -11,27 +12,29 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
 import com.github.ghkvud2.ft4j.marshall.MarshallManager;
+import com.github.ghkvud2.ft4j.unmarshall.UnMarshallFactory;
+import com.github.ghkvud2.ft4j.unmarshall.UnMarshallManager;
 
 @DisplayName("Unmarshall - @IntValue 테스트")
 public class IntValueTest {
 
 	private MarshallManager marshaller;
 	private UnMarshallManager unMarshaller;
+	private ConverterType type;
 
 	@BeforeEach
 	void setUp() {
-		marshaller = MarshallFactory.builder()
-				.converter(com.github.ghkvud2.ft4j.constant.ConverterType.UTF_8).build();
-		unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
-
+		type = ConverterType.UTF_8;
+		marshaller = MarshallFactory.builder().converter(type).build();
+		unMarshaller = UnMarshallFactory.builder().converter(type).build();
 	}
 
 	@DisplayName("@IntValue 테스트")
 	@Test
 	void basic() {
 		IntTestClass input = new IntTestClass(1, 2, 3);
-		String result = marshaller.marshall(input);
-		IntTestClass expected = unMarshaller.unmarshall(result, IntTestClass.class);
+		byte[] result = marshaller.marshall(input);
+		IntTestClass expected = unMarshaller.unmarshall(convert(result, type), IntTestClass.class);
 		equalsObject(expected, input);
 		print(input, expected);
 	}
@@ -40,8 +43,8 @@ public class IntValueTest {
 	@Test
 	void complex() {
 		IntTestClass2 input = new IntTestClass2(1, 2, 3);
-		String result = marshaller.marshall(input);
-		IntTestClass2 expected = unMarshaller.unmarshall(result, IntTestClass2.class);
+		byte[] result = marshaller.marshall(input);
+		IntTestClass2 expected = unMarshaller.unmarshall(convert(result, type), IntTestClass2.class);
 		equalsObject(expected, input);
 		print(input, expected);
 	}
