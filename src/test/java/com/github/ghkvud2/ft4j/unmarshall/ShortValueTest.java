@@ -1,6 +1,5 @@
 package com.github.ghkvud2.ft4j.unmarshall;
 
-import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.*;
@@ -12,8 +11,6 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
 import com.github.ghkvud2.ft4j.marshall.MarshallManager;
-import com.github.ghkvud2.ft4j.unmarshall.UnMarshallFactory;
-import com.github.ghkvud2.ft4j.unmarshall.UnMarshallManager;
 
 @DisplayName("Unmarshall - @ShortValue 테스트")
 public class ShortValueTest {
@@ -34,7 +31,7 @@ public class ShortValueTest {
 	void basic() {
 		ShortTestClass input = new ShortTestClass((short) 1, (short) 2, (short) 3);
 		byte[] result = marshaller.marshall(input);
-		ShortTestClass expected = unMarshaller.unmarshall(convert(result, type), ShortTestClass.class);
+		ShortTestClass expected = unMarshaller.unmarshall(result, ShortTestClass.class);
 		equalsObject(expected, input);
 		print(input, expected);
 	}
@@ -44,7 +41,7 @@ public class ShortValueTest {
 	void complex() {
 		ShortTestClass2 input = new ShortTestClass2((short) 1, (short) 2, (short) 3);
 		byte[] result = marshaller.marshall(input);
-		ShortTestClass2 expected = unMarshaller.unmarshall(convert(result, type), ShortTestClass2.class);
+		ShortTestClass2 expected = unMarshaller.unmarshall(result, ShortTestClass2.class);
 		equalsObject(expected, input);
 		print(input, expected);
 

@@ -13,8 +13,6 @@ import com.github.ghkvud2.ft4j.annotation.Order;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.*;
 import com.github.ghkvud2.ft4j.generator.Generator;
-import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
-import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("@GeneratedValue 어노테이션")
 public class GeneratorTest {

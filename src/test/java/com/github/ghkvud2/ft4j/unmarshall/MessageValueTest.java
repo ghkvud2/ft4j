@@ -1,6 +1,5 @@
 package com.github.ghkvud2.ft4j.unmarshall;
 
-import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.*;
@@ -12,8 +11,6 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
 import com.github.ghkvud2.ft4j.marshall.MarshallManager;
-import com.github.ghkvud2.ft4j.unmarshall.UnMarshallFactory;
-import com.github.ghkvud2.ft4j.unmarshall.UnMarshallManager;
 
 @DisplayName("Unmarshall - @Message 테스트")
 public class MessageValueTest {
@@ -34,7 +31,7 @@ public class MessageValueTest {
 	void basic_test() {
 		MessageTestClass input = new MessageTestClass("가", "나다", "라마바");
 		byte[] result = marshaller.marshall(input);
-		MessageTestClass expected = unMarshaller.unmarshall(convert(result, type), MessageTestClass.class);
+		MessageTestClass expected = unMarshaller.unmarshall(result, MessageTestClass.class);
 		equalsObject(expected, input);
 		print(input, expected);
 	}
@@ -44,7 +41,7 @@ public class MessageValueTest {
 	void complex_test() {
 		MessageTestClass2 input = new MessageTestClass2("가", "나다", "라마바");
 		byte[] result = marshaller.marshall(input);
-		MessageTestClass2 expected = unMarshaller.unmarshall(convert(result, type), MessageTestClass2.class);
+		MessageTestClass2 expected = unMarshaller.unmarshall(result, MessageTestClass2.class);
 		equalsObject(expected, input);
 		print(input, expected);
 	}

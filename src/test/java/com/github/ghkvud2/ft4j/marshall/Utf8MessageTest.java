@@ -14,8 +14,6 @@ import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.DefaultValueExceedsLimitException;
-import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
-import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("Marshall - @Message 어노테이션 UTF-8")
 public class Utf8MessageTest {

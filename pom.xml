@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.ghkvud2</groupId>
 	<artifactId>ft4j</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>ft4j</name>
 	<description>Library that converts Java objects into strings by byte length</description>
 	<url>https://github.com/ghkvud2/ft4j</url>
@@ -12,6 +12,7 @@
 		<java.version>11</java.version>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
+		<!--
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<logback.version>1.2.11</logback.version>
@@ -21,6 +22,7 @@
 		<nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
 		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
 		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+		-->
 	</properties>
 	<licenses>
 		<license>
@@ -72,6 +74,8 @@
 			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+	
+	<!--
 	<build>
 		<plugins>
 			<plugin>
@@ -149,4 +153,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	-->
 </project>

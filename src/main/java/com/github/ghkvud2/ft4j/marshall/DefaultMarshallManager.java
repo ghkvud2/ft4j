@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.ghkvud2.ft4j.exception.MissingDefaultConstructorException;
 import com.github.ghkvud2.ft4j.generator.GeneratorCache;
 import com.github.ghkvud2.ft4j.property.AnnotationFieldProperty;
@@ -17,7 +14,6 @@ import com.github.ghkvud2.ft4j.validator.ValidatorManager;
 
 public class DefaultMarshallManager implements MarshallManager {
 
-	private static final Logger log = LoggerFactory.getLogger(DefaultMarshallManager.class);
 	private final PropertyFactory propertyFactory;
 	private final Marshaller marshaller;
 	private final ValidatorManager validatorManager;
@@ -90,6 +86,7 @@ public class DefaultMarshallManager implements MarshallManager {
 	private Object createObject(Class<?> fieldType) {
 		try {
 			Constructor<?> constructor = fieldType.getDeclaredConstructor();
+			constructor.setAccessible(true);
 			return constructor.newInstance();
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			throw new RuntimeException("Failed to create a new instance of the class: " + fieldType.getName(), e);

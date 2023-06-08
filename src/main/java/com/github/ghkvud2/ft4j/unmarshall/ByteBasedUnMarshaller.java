@@ -34,22 +34,22 @@ public class ByteBasedUnMarshaller implements UnMarshaller {
 		PaddingByte paddingByte = property.padding();
 		Justify justify = property.justify();
 
-		log.warn("field={}, limit={}, start={}, end={}, bytes.len={}", property.getField().getName(),limit, start, end, bytes.length);
+//		log.warn("field={}, limit={}, start={}, end={}, bytes.len={}", property.getField().getName(),limit, start, end, bytes.length);
 		if (end >= bytes.length) {
 			throw new FieldValueUnderFlowException("During unmarshalling, Field value bytes underflow.");
 		}
 
 		if (justify == Justify.LEFT) {
-			while (start < end && paddingByte.getValue() == bytes[end]) {
+			while (start <= end && paddingByte.getValue() == bytes[end]) {
 				end--;
 			}
 		} else if (justify == Justify.RIGHT) {
-			while (start < end && paddingByte.getValue() == bytes[start]) {
+			while (start <= end && paddingByte.getValue() == bytes[start]) {
 				start++;
 			}
 		}
 
-		log.warn("field={}, limit={}, start={}, end={}, bytes.len={}\n", property.getField().getName(),limit, start, end, bytes.length);
+//		log.warn("field={}, limit={}, start={}, end={}, bytes.len={}\n", property.getField().getName(),limit, start, end, bytes.length);
 		byte[] newBytes = new byte[end - start + 1];
 		System.arraycopy(bytes, start, newBytes, 0, newBytes.length);
 

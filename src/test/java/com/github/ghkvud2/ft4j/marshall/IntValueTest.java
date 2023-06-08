@@ -4,9 +4,6 @@ import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.nio.charset.Charset;
-import java.util.Arrays;
-
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -18,8 +15,6 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.DefaultValueExceedsLimitException;
 import com.github.ghkvud2.ft4j.exception.FieldValueExceedsLimitException;
-import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
-import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("Marshall - @IntValue 테스트")
 public class IntValueTest {

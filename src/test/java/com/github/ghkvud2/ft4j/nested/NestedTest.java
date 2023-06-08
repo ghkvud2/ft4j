@@ -1,9 +1,6 @@
 package com.github.ghkvud2.ft4j.nested;
 
-import static com.github.ghkvud2.ft4j.util.StringUtils.convert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +32,7 @@ public class NestedTest {
 	@Test
 	void nested() {
 		byte[] result = marshaller.marshall(input);
-		User expected = unMarshaller.unmarshall(convert(result, type), User.class);
+		User expected = unMarshaller.unmarshall(result, User.class);
 		assertObject(expected, input);
 	}
 

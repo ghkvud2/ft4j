@@ -16,8 +16,6 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.DefaultValueExceedsLimitException;
 import com.github.ghkvud2.ft4j.exception.FieldValueExceedsLimitException;
-import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
-import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("Marshall - @Float, Double 어노테이션")
 public class DecimalTest {

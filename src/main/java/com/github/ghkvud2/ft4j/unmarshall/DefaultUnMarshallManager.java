@@ -19,14 +19,14 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 	}
 
 	@Override
-	public <T> T unmarshall(String input, Class<T> clazz) {
+	public <T> T unmarshall(byte[] bytes, Class<T> clazz) {
 
 		try {
 
 			Constructor<T> constructor = clazz.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			T obj = constructor.newInstance();
-			byte[] bytes = unMarshaller.convertToBytes(input);
+//			byte[] bytes = unMarshaller.convertToBytes(input);
 			process(bytes, 0, obj);
 			return obj;
 		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | InstantiationException
