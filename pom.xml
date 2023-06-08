@@ -2,7 +2,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.ghkvud2</groupId>
+	<groupId>io.github.ghkvud2</groupId>
 	<artifactId>ft4j</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<name>ft4j</name>
@@ -32,15 +32,6 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<!--
-		<logback.version>1.2.11</logback.version>
-		<slf4j.version>1.7.36</slf4j.version>
-		<junit.version>5.8.2</junit.version>
-		<maven-plugin-plugin.version>3.6.4</maven-plugin-plugin.version>
-		<nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
-		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-		-->
 	</properties>
 	<distributionManagement>
 		<snapshotRepository>
@@ -117,10 +108,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.5</version>
-				<configuration>
-					<gpg.executable>gpg</gpg.executable>
-					<gpg.keyname>0BD6CFE0</gpg.keyname>
-				</configuration>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
