@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.ghkvud2</groupId>
 	<artifactId>ft4j</artifactId>
-	<version>2.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>ft4j</name>
 	<description>Library that converts Java objects into strings by byte length</description>
 	<url>https://github.com/ghkvud2/ft4j</url>
@@ -24,12 +24,12 @@
 	<scm>
 		<connection>scm:git:git://github.com/ghkvud2/ft4j.git</connection>
 		<developerConnection>scm:git:ssh://github.com:ghkvud2/ft4j.git</developerConnection>
-		<url>https://github.com/ghkvud2/ft4j</url>
+		<url>http://github.com/ghkvud2/ft4j/tree/main</url>
 	</scm>
 	<properties>
-		<java.version>11</java.version>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -70,7 +70,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<version>1.6.8</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
