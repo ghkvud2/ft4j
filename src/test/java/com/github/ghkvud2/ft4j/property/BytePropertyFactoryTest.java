@@ -46,7 +46,7 @@ class BytePropertyFactoryTest {
 		field = obj.getClass().getDeclaredField("num4");
 		property = (AbstractProperty<Double>) propertyFactory.createProperty(obj, field);
 		assertProperty(property, 6, "", false, PaddingByte.ZERO, Justify.RIGHT, 4.23);
-		
+
 		field = obj.getClass().getDeclaredField("num5");
 		property = (AbstractProperty<Double>) propertyFactory.createProperty(obj, field);
 		assertProperty(property, 7, "3.33", false, PaddingByte.ZERO, Justify.RIGHT, 3.33);
@@ -75,19 +75,19 @@ class BytePropertyFactoryTest {
 
 	static class TestClass {
 
-		@ShortValue(length = 3, defaultValue = "33", ignoreLimit = true)
+		@ShortValue(order = 1, length = 3, defaultValue = "33", ignoreLimit = true)
 		private short num1;
 
-		@IntValue(length = 4, paddingByte = PaddingByte.SPACE)
+		@IntValue(order = 2, length = 4, paddingByte = PaddingByte.SPACE)
 		private int num2;
 
-		@LongValue(length = 5, justify = Justify.LEFT)
+		@LongValue(order = 3, length = 5, justify = Justify.LEFT)
 		private long num3;
 
-		@DoubleValue(length = 6)
+		@DoubleValue(order = 4, length = 6)
 		private double num4;
 
-		@DoubleValue(length = 7, defaultValue = "3.33")
+		@DoubleValue(order = 5, length = 7, defaultValue = "3.33")
 		private double num5;
 
 		public TestClass(short num1, int num2, long num3, double num4, double num5) {

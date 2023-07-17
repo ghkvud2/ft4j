@@ -9,7 +9,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import com.github.ghkvud2.ft4j.annotation.FloatValue;
-import com.github.ghkvud2.ft4j.annotation.Order;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
@@ -28,7 +27,6 @@ public class FloatValueTest {
 		marshaller = MarshallFactory.builder().converter(type).build();
 	}
 
-
 	@DisplayName("length 속성")
 	@Nested
 	class LengthTest {
@@ -45,7 +43,7 @@ public class FloatValueTest {
 
 		@DisplayName("field length > length property and ignoreLimit=false, exception")
 		@ParameterizedTest(name = "when length=5, input={0}")
-		@CsvSource(value = { "12.345"})
+		@CsvSource(value = { "12.345" })
 		void field_grater_than_length(float input) {
 			Bank4 bank = new Bank4(input);
 			assertThrows(FieldValueExceedsLimitException.class, () -> marshaller.marshall(bank));
@@ -62,8 +60,7 @@ public class FloatValueTest {
 
 		class Bank {
 
-			@Order(1)
-			@FloatValue(length = 10)
+			@FloatValue(order = 1, length = 10)
 			private float rate;
 
 			public Bank(float rate) {
@@ -73,8 +70,7 @@ public class FloatValueTest {
 
 		class Bank2 {
 
-			@Order(1)
-			@FloatValue(length = 7)
+			@FloatValue(order = 1, length = 7)
 			private float rate;
 
 			public Bank2(float rate) {
@@ -84,19 +80,17 @@ public class FloatValueTest {
 
 		class Bank3 {
 
-			@Order(1)
-			@FloatValue(length = 7, ignoreLimit = true)
+			@FloatValue(order = 1, length = 7, ignoreLimit = true)
 			private float rate;
 
 			public Bank3(float rate) {
 				this.rate = rate;
 			}
 		}
-		
+
 		class Bank4 {
 
-			@Order(1)
-			@FloatValue(length = 5)
+			@FloatValue(order = 1, length = 5)
 			private float rate;
 
 			public Bank4(float rate) {
@@ -148,8 +142,7 @@ public class FloatValueTest {
 
 		class Bank {
 
-			@Order(1)
-			@FloatValue(length = 10, fractionalLength = 3)
+			@FloatValue(order = 1, length = 10, fractionalLength = 3)
 			private float rate;
 
 			public Bank(float rate) {
@@ -159,8 +152,7 @@ public class FloatValueTest {
 
 		class Bank2 {
 
-			@Order(1)
-			@FloatValue(length = 7, fractionalLength = 0)
+			@FloatValue(order = 1, length = 7, fractionalLength = 0)
 			private float rate;
 
 			public Bank2(float rate) {
@@ -170,8 +162,7 @@ public class FloatValueTest {
 
 		class Bank3 {
 
-			@Order(1)
-			@FloatValue(length = 7, fractionalLength = -1)
+			@FloatValue(order = 1, length = 7, fractionalLength = -1)
 			private float rate;
 
 			public Bank3(float rate) {
@@ -218,8 +209,7 @@ public class FloatValueTest {
 
 		class Bank {
 
-			@Order(1)
-			@FloatValue(length = 10, defaultValue = "2.933")
+			@FloatValue(order = 1, length = 10, defaultValue = "2.933")
 			private float rate;
 
 			public Bank(float rate) {
@@ -229,8 +219,7 @@ public class FloatValueTest {
 
 		class Bank2 {
 
-			@Order(1)
-			@FloatValue(length = 5, defaultValue = "2.933")
+			@FloatValue(order = 1, length = 5, defaultValue = "2.933")
 			private float rate;
 
 			public Bank2(float rate) {
@@ -239,8 +228,8 @@ public class FloatValueTest {
 		}
 
 		class Bank3 {
-			@Order(1)
-			@FloatValue(length = 3, defaultValue = "2.933")
+
+			@FloatValue(order = 1, length = 3, defaultValue = "2.933")
 			private float rate;
 
 			public Bank3(float rate) {
@@ -249,8 +238,8 @@ public class FloatValueTest {
 		}
 
 		class Bank4 {
-			@Order(1)
-			@FloatValue(length = 3, defaultValue = "A")
+
+			@FloatValue(order = 1, length = 3, defaultValue = "A")
 			private float rate;
 
 			public Bank4(float rate) {
@@ -291,8 +280,8 @@ public class FloatValueTest {
 		}
 
 		class Bank {
-			@Order(1)
-			@FloatValue(length = 10)
+
+			@FloatValue(order = 1, length = 10)
 			private float rate;
 
 			public Bank(float rate) {
@@ -301,8 +290,8 @@ public class FloatValueTest {
 		}
 
 		class Bank2 {
-			@Order(1)
-			@FloatValue(length = 5, paddingByte = PaddingByte.SPACE)
+
+			@FloatValue(order = 1, length = 5, paddingByte = PaddingByte.SPACE)
 			private float rate;
 
 			public Bank2(float rate) {
@@ -311,18 +300,18 @@ public class FloatValueTest {
 		}
 
 		class Bank3 {
-			@Order(1)
-			@FloatValue(length = 10, paddingByte = PaddingByte.SPACE)
+
+			@FloatValue(order = 1, length = 10, paddingByte = PaddingByte.SPACE)
 			private float rate;
 
 			public Bank3(float rate) {
 				this.rate = rate;
 			}
 		}
-		
+
 		class Bank4 {
-			@Order(1)
-			@FloatValue(length = 5, paddingByte = PaddingByte.SPACE)
+
+			@FloatValue(order = 1, length = 5, paddingByte = PaddingByte.SPACE)
 			private float rate;
 
 			public Bank4(float rate) {
@@ -355,8 +344,8 @@ public class FloatValueTest {
 		}
 
 		class Bank {
-			@Order(1)
-			@FloatValue(length = 10)
+
+			@FloatValue(order = 1, length = 10)
 			private float rate;
 
 			public Bank(float rate) {
@@ -365,8 +354,8 @@ public class FloatValueTest {
 		}
 
 		class Bank2 {
-			@Order(1)
-			@FloatValue(length = 10, justify = Justify.LEFT)
+
+			@FloatValue(order = 1, length = 10, justify = Justify.LEFT)
 			private float rate;
 
 			public Bank2(float rate) {

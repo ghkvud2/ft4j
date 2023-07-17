@@ -4,15 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.*;
 
-import com.github.ghkvud2.ft4j.annotation.Message;
-import com.github.ghkvud2.ft4j.annotation.Order;
+import com.github.ghkvud2.ft4j.annotation.StringValue;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
 import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
-@DisplayName("Unmarshall - @Message 테스트")
+@DisplayName("Unmarshall - @StringValue 테스트")
 public class MessageValueTest {
 
 	private MarshallManager marshaller;
@@ -26,7 +25,7 @@ public class MessageValueTest {
 		unMarshaller = UnMarshallFactory.builder().converter(type).build();
 	}
 
-	@DisplayName("@Message 기본 테스트")
+	@DisplayName("@StringValue 기본 테스트")
 	@Test
 	void basic_test() {
 		MessageTestClass input = new MessageTestClass("가", "나다", "라마바");
@@ -36,7 +35,7 @@ public class MessageValueTest {
 		print(input, expected);
 	}
 
-	@DisplayName("@Message 여러 속성 설정 후, 테스트")
+	@DisplayName("@StringValue 여러 속성 설정 후, 테스트")
 	@Test
 	void complex_test() {
 		MessageTestClass2 input = new MessageTestClass2("가", "나다", "라마바");
@@ -48,16 +47,13 @@ public class MessageValueTest {
 
 	static class MessageTestClass {
 
-		@Order(1)
-		@Message(length = 2)
+		@StringValue(order = 1, length = 2)
 		private String num1;
 
-		@Order(1)
-		@Message(length = 6)
+		@StringValue(order = 2, length = 6)
 		private String num2;
 
-		@Order(3)
-		@Message(length = 10)
+		@StringValue(order = 3, length = 10)
 		private String num3;
 
 		public MessageTestClass(String num1, String num2, String num3) {
@@ -77,16 +73,13 @@ public class MessageValueTest {
 
 	static class MessageTestClass2 {
 
-		@Order(1)
-		@Message(length = 10, defaultValue = "디폴트값")
+		@StringValue(order = 1, length = 10, defaultValue = "디폴트값")
 		private String num1;
 
-		@Order(2)
-		@Message(length = 15, paddingByte = PaddingByte.ZERO)
+		@StringValue(order = 2, length = 15, paddingByte = PaddingByte.ZERO)
 		private String num2;
 
-		@Order(3)
-		@Message(length = 20, paddingByte = PaddingByte.ZERO, justify = Justify.RIGHT)
+		@StringValue(order = 3, length = 20, paddingByte = PaddingByte.ZERO, justify = Justify.RIGHT)
 		private String num3;
 
 		public MessageTestClass2(String num1, String num2, String num3) {

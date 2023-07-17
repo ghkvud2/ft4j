@@ -8,14 +8,13 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import com.github.ghkvud2.ft4j.annotation.Message;
-import com.github.ghkvud2.ft4j.annotation.Order;
+import com.github.ghkvud2.ft4j.annotation.StringValue;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.DefaultValueExceedsLimitException;
 
-@DisplayName("Marshall - @Message 어노테이션 UTF-8")
+@DisplayName("Marshall - @StringValue 어노테이션 UTF-8")
 public class Utf8MessageTest {
 
 	private MarshallManager marshaller;
@@ -52,8 +51,7 @@ public class Utf8MessageTest {
 		}
 
 		class User {
-			@Order(1)
-			@Message(length = 10)
+			@StringValue(order = 1, length = 10)
 			private String name;
 
 			public User(String name) {
@@ -91,8 +89,7 @@ public class Utf8MessageTest {
 
 		class User {
 
-			@Order(1)
-			@Message(length = 15, defaultValue = "가나다")
+			@StringValue(order = 1, length = 15, defaultValue = "가나다")
 			private String name;
 
 			public User(String name) {
@@ -101,8 +98,8 @@ public class Utf8MessageTest {
 		}
 
 		class User2 {
-			@Order(1)
-			@Message(length = 3, defaultValue = "my name")
+
+			@StringValue(order = 1, length = 3, defaultValue = "my name")
 			private String name;
 
 			public User2(String name) {
@@ -111,8 +108,8 @@ public class Utf8MessageTest {
 		}
 
 		class User3 {
-			@Order(1)
-			@Message(length = 15, defaultValue = "가나다라마")
+
+			@StringValue(order = 1, length = 15, defaultValue = "가나다라마")
 			private String name;
 
 			public User3(String name) {
@@ -153,8 +150,8 @@ public class Utf8MessageTest {
 		}
 
 		class User {
-			@Order(1)
-			@Message(length = 5)
+
+			@StringValue(order = 1, length = 5)
 			private String name;
 
 			public User(String name) {
@@ -163,8 +160,8 @@ public class Utf8MessageTest {
 		}
 
 		class User2 {
-			@Order(1)
-			@Message(length = 5, paddingByte = PaddingByte.ZERO)
+
+			@StringValue(order = 1, length = 5, paddingByte = PaddingByte.ZERO)
 			private String name;
 
 			public User2(String name) {
@@ -196,8 +193,8 @@ public class Utf8MessageTest {
 		}
 
 		class User {
-			@Order(1)
-			@Message(length = 10)
+
+			@StringValue(order = 1, length = 10)
 			private String name;
 
 			public User(String name) {
@@ -206,8 +203,8 @@ public class Utf8MessageTest {
 		}
 
 		class User2 {
-			@Order(1)
-			@Message(length = 10, justify = Justify.RIGHT)
+
+			@StringValue(order = 1, length = 10, justify = Justify.RIGHT)
 			private String name;
 
 			public User2(String name) {

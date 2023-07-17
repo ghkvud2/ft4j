@@ -1,5 +1,6 @@
 package com.github.ghkvud2.ft4j.exception;
 
+@Deprecated
 public class InvalidAnnotationConfigurationException extends RuntimeException {
 
 	private static final long serialVersionUID = 7483377571270079324L;

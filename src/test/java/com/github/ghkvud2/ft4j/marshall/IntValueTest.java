@@ -9,7 +9,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import com.github.ghkvud2.ft4j.annotation.IntValue;
-import com.github.ghkvud2.ft4j.annotation.Order;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
@@ -58,8 +57,8 @@ public class IntValueTest {
 		}
 
 		class Product {
-			@Order(1)
-			@IntValue(length = 5)
+
+			@IntValue(order = 1, length = 5)
 			private int price;
 
 			public Product(int price) {
@@ -68,8 +67,8 @@ public class IntValueTest {
 		}
 
 		class Product2 {
-			@Order(1)
-			@IntValue(length = 3)
+
+			@IntValue(order = 1, length = 3)
 			private int price;
 
 			public Product2(int price) {
@@ -78,8 +77,8 @@ public class IntValueTest {
 		}
 
 		class Product3 {
-			@Order(1)
-			@IntValue(length = 3, ignoreLimit = true)
+
+			@IntValue(order = 1, length = 3, ignoreLimit = true)
 			private int price;
 
 			public Product3(int price) {
@@ -123,8 +122,8 @@ public class IntValueTest {
 		}
 
 		class Product {
-			@Order(1)
-			@IntValue(length = 5, defaultValue = "99")
+
+			@IntValue(order = 1, length = 5, defaultValue = "99")
 			private int price;
 
 			public Product(int price) {
@@ -133,8 +132,8 @@ public class IntValueTest {
 		}
 
 		class Product2 {
-			@Order(1)
-			@IntValue(length = 3, defaultValue = "1234")
+
+			@IntValue(order = 1, length = 3, defaultValue = "1234")
 			private int price;
 
 			public Product2(int price) {
@@ -143,8 +142,8 @@ public class IntValueTest {
 		}
 
 		class Product3 {
-			@Order(1)
-			@IntValue(length = 5, defaultValue = "12345")
+
+			@IntValue(order = 1, length = 5, defaultValue = "12345")
 			private int price;
 
 			public Product3(int price) {
@@ -153,8 +152,8 @@ public class IntValueTest {
 		}
 
 		class Product4 {
-			@Order(1)
-			@IntValue(length = 5, defaultValue = "ABC")
+
+			@IntValue(order = 1, length = 5, defaultValue = "ABC")
 			private int price;
 
 			public Product4(int price) {
@@ -195,8 +194,8 @@ public class IntValueTest {
 		}
 
 		class Product {
-			@Order(1)
-			@IntValue(length = 5)
+
+			@IntValue(order = 1, length = 5)
 			private int price;
 
 			public Product(int price) {
@@ -205,8 +204,8 @@ public class IntValueTest {
 		}
 
 		class Product2 {
-			@Order(1)
-			@IntValue(length = 5, paddingByte = PaddingByte.SPACE)
+
+			@IntValue(order = 1, length = 5, paddingByte = PaddingByte.SPACE)
 			private int price;
 
 			public Product2(int price) {
@@ -238,8 +237,8 @@ public class IntValueTest {
 		}
 
 		class Product {
-			@Order(1)
-			@IntValue(length = 5)
+
+			@IntValue(order = 1, length = 5)
 			private int price;
 
 			public Product(int price) {
@@ -248,8 +247,8 @@ public class IntValueTest {
 		}
 
 		class Product2 {
-			@Order(1)
-			@IntValue(length = 5, justify = Justify.LEFT)
+
+			@IntValue(order = 1, length = 5, justify = Justify.LEFT)
 			private int price;
 
 			public Product2(int price) {

@@ -3,41 +3,40 @@ package com.github.ghkvud2.ft4j.property.bytes;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
-import com.github.ghkvud2.ft4j.annotation.Message;
+import com.github.ghkvud2.ft4j.annotation.StringValue;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.exception.UnSupportedTypeException;
 import com.github.ghkvud2.ft4j.property.AbstractProperty;
 
-@Deprecated
-public class MessageProperty extends AbstractProperty<String> implements ByteProperty {
+public class StringProperty extends AbstractProperty<String> implements ByteProperty {
 
-	public MessageProperty(Object obj, Field field) {
+	public StringProperty(Object obj, Field field) {
 		super(obj, field);
 	}
 
-	public MessageProperty(Field field) {
+	public StringProperty(Field field) {
 		super(field);
 	}
 
 	@Override
 	public int length() {
-		return ((Message) annotation).length();
+		return ((StringValue) annotation).length();
 	}
 
 	@Override
 	public String defaultValue() {
-		return ((Message) annotation).defaultValue();
+		return ((StringValue) annotation).defaultValue();
 	}
 
 	@Override
 	public PaddingByte padding() {
-		return ((Message) annotation).paddingByte();
+		return ((StringValue) annotation).paddingByte();
 	}
 
 	@Override
 	public Justify justify() {
-		return ((Message) annotation).justify();
+		return ((StringValue) annotation).justify();
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public class MessageProperty extends AbstractProperty<String> implements BytePro
 
 	@Override
 	protected Class<? extends Annotation> getAnnotationType() {
-		return Message.class;
+		return StringValue.class;
 	}
 
 	@Override

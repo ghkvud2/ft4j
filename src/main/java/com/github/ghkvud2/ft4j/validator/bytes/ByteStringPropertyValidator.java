@@ -1,14 +1,13 @@
 package com.github.ghkvud2.ft4j.validator.bytes;
 
 import com.github.ghkvud2.ft4j.property.AnnotationFieldProperty;
-import com.github.ghkvud2.ft4j.property.bytes.MessageProperty;
+import com.github.ghkvud2.ft4j.property.bytes.StringProperty;
 
-@Deprecated
-public class ByteMessagePropertyValidator implements BytePropertyValidator {
+public class ByteStringPropertyValidator implements BytePropertyValidator {
 
 	@Override
 	public boolean support(AnnotationFieldProperty property) {
-		return property.getClass().isAssignableFrom(MessageProperty.class);
+		return property.getClass().isAssignableFrom(StringProperty.class);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
 
 import com.github.ghkvud2.ft4j.annotation.LongValue;
-import com.github.ghkvud2.ft4j.annotation.Order;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
@@ -48,16 +47,13 @@ public class LongValueTest {
 
 	static class LongTestClass {
 
-		@Order(1)
-		@LongValue(length = 1)
+		@LongValue(order = 1, length = 1)
 		private long num1;
 
-		@Order(2)
-		@LongValue(length = 5)
+		@LongValue(order = 2, length = 5)
 		private long num2;
 
-		@Order(3)
-		@LongValue(length = 10)
+		@LongValue(order = 3, length = 10)
 		private long num3;
 
 		public LongTestClass(long num1, long num2, long num3) {
@@ -77,16 +73,13 @@ public class LongValueTest {
 
 	static class LongTestClass2 {
 
-		@Order(1)
-		@LongValue(length = 1, defaultValue = "9")
+		@LongValue(order = 1, length = 1, defaultValue = "9")
 		private long num1;
 
-		@Order(2)
-		@LongValue(length = 5, paddingByte = PaddingByte.SPACE)
+		@LongValue(order = 2, length = 5, paddingByte = PaddingByte.SPACE)
 		private long num2;
 
-		@Order(3)
-		@LongValue(length = 10, paddingByte = PaddingByte.SPACE, justify = Justify.LEFT)
+		@LongValue(order = 3, length = 10, paddingByte = PaddingByte.SPACE, justify = Justify.LEFT)
 		private long num3;
 
 		public LongTestClass2(long num1, long num2, long num3) {

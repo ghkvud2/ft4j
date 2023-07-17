@@ -23,7 +23,7 @@ ft4j를 사용하기 위해서, `ft4j.jar`를 어플리케이션 클래스패스
 ```java
 class Person {
 
-    @Message(length = 15)
+    @StringValue(length = 15)
     private String name;
 
     @IntValue(length = 5)
@@ -37,7 +37,7 @@ class Person {
 
 객체를 문자열로 표시하기 위해서는 미리 정의된 어노테이션을 사용해야합니다. 어노테이션은 총 세 가지가 있습니다.
 
-1. @Message : String 타입의 필드에 선언합니다. length는 해당 필드 값을 문자열로 나타냈을 때 최대 길이를 의미합니다 (바이트 기준).
+1. @StringValue : String 타입의 필드에 선언합니다. length는 해당 필드 값을 문자열로 나타냈을 때 최대 길이를 의미합니다 (바이트 기준).
 2. @IntValue : short, int, long과 같은 정수형 타입의 필드에 선언합니다.
 3. @Decimal : float, double과 같은 실수형 타입의 필드에 선언합니다.
 
@@ -63,7 +63,7 @@ age  : [00025], 전체 5바이트
 height : [0000175.60], 전체 10바이트
 ```
 
-1. @Message는 필드 값을 왼쪽 정렬하고, 나머지 바이트를 SPACE로 채웁니다.
+1. @StringValue는 필드 값을 왼쪽 정렬하고, 나머지 바이트를 SPACE로 채웁니다.
 
 2. @IntValue은 필드 값을 오른쪽 정렬하고, 나머지 바이트를 ZERO로 채웁니다.
 
@@ -79,7 +79,7 @@ height : [0000175.60], 전체 10바이트
 
 ft4j에서 사용할 수 있는 어노테이션 종류에 대해서 살펴봅니다.
 
-#### 3.1.1 @Message
+#### 3.1.1 @StringValue
 
 객체의 String 타입의 필드에 선언할 수 있는 어노테이션입니다. 주요 속성 값은 아래와 같습니다.
 
@@ -117,10 +117,10 @@ public class MessageTest {
 }
 ```
 
-@Message 어노테이션의 length 값에 15를 설정한 뒤, User 객체의 필드 값을 "John"으로 설정하고 마샬링하면 총 15바이트 크기의 문자열이 생성됩니다. 다른 속성 값들은 모두 기본 값을 그대로 사용하기 때문에 필드 값은 왼쪽 정렬되고 나머지 바이트는 SPACE로 채워집니다.
+@StringValue 어노테이션의 length 값에 15를 설정한 뒤, User 객체의 필드 값을 "John"으로 설정하고 마샬링하면 총 15바이트 크기의 문자열이 생성됩니다. 다른 속성 값들은 모두 기본 값을 그대로 사용하기 때문에 필드 값은 왼쪽 정렬되고 나머지 바이트는 SPACE로 채워집니다.
 
 ```java
-@Message(length = 15)
+@StringValue(length = 15)
 private String name;
 ```
 
@@ -136,7 +136,7 @@ void length_test() {
 만약, 필드 값이 length의 길이보다 더 클 경우에는 필드 값을 length 값에 맞춰 자른 후 마샬링합니다. "John"은 4바이트인 반면, length의 값은 3이기 때문에 결과는 "Joh"입니다.
 
 ```java
-@Message(length = 3)
+@StringValue(length = 3)
 private String name;
 ```
 
@@ -154,7 +154,7 @@ void exceed_length_test() {
 defaultValue 속성 값을 "my name"로 설정하면, name 필드에 기존에 설정된 "John" 대신 "my name" 값으로 마샬링을 합니다.
 
 ```java
-@Message(length = 15, defaultValue="my name")
+@StringValue(length = 15, defaultValue="my name")
 private String name;
 ```
 
@@ -170,7 +170,7 @@ void default_value_test() {
 만약, defaultValue 속성 값이 length의 길이보다 더 클 경우에는 **DefaultValueExceedsLimitException가 발생합니다.**
 
 ```java
-@Message(length = 3, defaultValue="my name")
+@StringValue(length = 3, defaultValue="my name")
 private String name;
 ```
 
@@ -186,7 +186,7 @@ void default_value_exceed_limit() {
 paddingByte 속성 값의 기본 값은 SPACE입니다. 나머지 바이트가 공백으로 채워진 것을 확인할 수 있습니다.
 
 ```java
-@Message(length = 15)
+@StringValue(length = 15)
 private String name;
 ```
 
@@ -202,7 +202,7 @@ void default_padding_test() {
 paddingByte 속성 값을 ZERO로 지정하면 나머지 바이트를 해당 값으로 채웁니다. PaddingByte의 종류는 다른 섹션을 참고하세요.
 
 ```java
-@Message(length = 15, paddingByte = PaddingByte.ZERO)
+@StringValue(length = 15, paddingByte = PaddingByte.ZERO)
 private String name;
 ```
 
@@ -220,7 +220,7 @@ void padding_test() {
 justify 속성 값의 기본 값은 LEFT 입니다. 필드 값이 왼쪽 정렬된 것을 확인할 수 있습니다.
 
 ```java
-@Message(length = 15)
+@StringValue(length = 15)
 private String name;
 ```
 
@@ -236,7 +236,7 @@ void justify_left_test() {
 justify의 속성 값을 RIGHT로 지정하면 필드 값이 오른쪽 정렬된 것을 확인할 수 있습니다.
 
 ```java
-@Message(length = 15, justify = Justify.RIGHT)
+@StringValue(length = 15, justify = Justify.RIGHT)
 private String name;
 ```
 
@@ -261,9 +261,9 @@ void justify_right_test() {
 | justify      | Justify     | N   | Justify.RIGHT    | length 속성 값이 필드 값의 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다. 기본 값은 오른쪽 정렬입니다.                               |
 | ignoreLimit  | boolean     | N   | false            | length 속성 값이 필드 값의 바이트 수보다 더 작을 때, 예외를 발생시킬지 여부를 결정합니다. 기본 값은 false이며, 이 경우 예외가 발생합니다. (아래 상세 내용 참고) |
 
-> String 타입의 필드를 처리하는 @Message 어노테이션은 필드 값이 length 속성 값보다 더 작을 때, 예외를 발생시키지 않고 length 속성 값에 맞춰 바이트를 잘라서 문자열을 생성했습니다. 그러나 @IntValue 어노테이션이 선언될 수 있는 short, int, long 타입의 필드들은 length 길이에 맞춰 필드 값을 자르게되면 기존 필드 값과는 전혀 다른 의미의 값을 나타내게 됩니다.
+> String 타입의 필드를 처리하는 @StringValue 어노테이션은 필드 값이 length 속성 값보다 더 작을 때, 예외를 발생시키지 않고 length 속성 값에 맞춰 바이트를 잘라서 문자열을 생성했습니다. 그러나 @IntValue 어노테이션이 선언될 수 있는 short, int, long 타입의 필드들은 length 길이에 맞춰 필드 값을 자르게되면 기존 필드 값과는 전혀 다른 의미의 값을 나타내게 됩니다.
 > 
-> 예를 들어, int형 타입의 필드 값에 100이라는 값이 설정되었고 위 테스트처럼 length 속성 값을 '2'로 설정했을 때를 생각해보겠습니다. @Message 어노테이션과 마찬가지로 length 속성 값에 맞춰 바이트를 자르게되면 100은 10이라는 값으로 변환될 것입니다. 이는 의도하지 않은 심각한 오류를 발생시킬 수 있으므로 @IntValue 어노테이션에는 이러한 경우에 기본적으로 예외를 발생시키도록 하였습니다.
+> 예를 들어, int형 타입의 필드 값에 100이라는 값이 설정되었고 위 테스트처럼 length 속성 값을 '2'로 설정했을 때를 생각해보겠습니다. @StringValue 어노테이션과 마찬가지로 length 속성 값에 맞춰 바이트를 자르게되면 100은 10이라는 값으로 변환될 것입니다. 이는 의도하지 않은 심각한 오류를 발생시킬 수 있으므로 @IntValue 어노테이션에는 이러한 경우에 기본적으로 예외를 발생시키도록 하였습니다.
 > 
 > 실생활의 예를 들어보면, 계좌이체를 하는 경우 입금한 사람의 이름이 잘리는 것과 의도치않게 입금 금액이 잘리는 경우, 둘 중 어떠한 상황이 더 심각한 오류가 발생한 상황일까요?
 
@@ -740,7 +740,7 @@ generator 속성 값에 위에서 생성한 FullDateTimeGenerator 클래스를 �
 
 ```java
 @GeneratedValue(generator = FullDateTimeGenerator.class)
-@Message(length = 17)
+@StringValue(length = 17)
 private String paymentDate;
 ```
 
@@ -756,7 +756,7 @@ void generator_test() {
 실행 결과 : [20230515162424336]
 ```
 
-@Message 어노테이션의 length 속성 값보다 generator가 생성한 문자열의 길이가 더 클 경우, GeneratedValueExceedsLimitException 예외가 발생합니다.
+@StringValue 어노테이션의 length 속성 값보다 generator가 생성한 문자열의 길이가 더 클 경우, GeneratedValueExceedsLimitException 예외가 발생합니다.
 
 ```java
 @Test
@@ -786,14 +786,14 @@ uuid 필드는 generator 속성 값에 UUIDGenerator 클래스를 지정했습�
 
 ```java
 @GeneratedValue(key = "id", cacheable = true, generator = UUIDGenerator.class)
-@Message(length = 36)
+@StringValue(length = 36)
 private String uuid;
 
-@Message(length = 5)
+@StringValue(length = 5)
 private String space;
 
 @GeneratedValue(key = "id", cacheable = true)
-@Message(length = 36)
+@StringValue(length = 36)
 private String cachedId;
 ```
 
@@ -815,14 +815,14 @@ notCachedId 필드에 cacheable 속성을 추가하지 않으면, uuid 필드와
 
 ```java
         @GeneratedValue(key = "id", cacheable = true, generator = UUIDGenerator.class)
-        @Message(length = 36)
+        @StringValue(length = 36)
         private String uuid;
 
-        @Message(length = 5)
+        @StringValue(length = 5)
         private String space;
 
         @GeneratedValue(generator = UUIDGenerator.class)
-        @Message(length = 36)
+        @StringValue(length = 36)
         private String notCachedId;
 ```
 
@@ -842,14 +842,14 @@ key 속성으로 전달된 키 값이 존재하지 않을 경우, generator에 �
 
 ```java
 @GeneratedValue(key = "id", cacheable = true)
-@Message(length = 36)
+@StringValue(length = 36)
 private String uuid;
 
-@Message(length = 5)
+@StringValue(length = 5)
 private String space;
 
 @GeneratedValue(key = "id", cacheable = true)
-@Message(length = 36)
+@StringValue(length = 36)
 private String cachedId;
 ```
 
@@ -864,14 +864,14 @@ cachedId 필드에 cacheable 속성을 true로 설정하고 key 속성 값을 �
 
 ```java
 @GeneratedValue(key = "id", cacheable = true, generator = UUIDGenerator.class)
-@Message(length = 36)
+@StringValue(length = 36)
 private String uuid;
 
-@Message(length = 5)
+@StringValue(length = 5)
 private String space;
 
 @GeneratedValue(cacheable = true)
-@Message(length = 36)
+@StringValue(length = 36)
 private String cachedId;
 ```
 
@@ -886,14 +886,14 @@ void missing_key_test() {
 
 ```java
 @GeneratedValue(key = "id", cacheable = true, generator = UUIDGenerator.class)
-@Message(length = 36)
+@StringValue(length = 36)
 private String uuid;
 
-@Message(length = 5)
+@StringValue(length = 5)
 private String space;
 
 @GeneratedValue(key = "id", cacheable = true)
-@Message(length = 36)
+@StringValue(length = 36)
 private String cachedId;
 ```
 

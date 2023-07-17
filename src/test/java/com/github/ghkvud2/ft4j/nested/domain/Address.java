@@ -1,20 +1,16 @@
 package com.github.ghkvud2.ft4j.nested.domain;
 
-import com.github.ghkvud2.ft4j.annotation.Message;
-import com.github.ghkvud2.ft4j.annotation.Order;
+import com.github.ghkvud2.ft4j.annotation.StringValue;
 
 public class Address {
 
-	@Order(1)
-	@Message(length = 10)
+	@StringValue(order = 1, length = 10)
 	private String addr1;
 
-	@Order(2)
-	@Message(length = 10)
+	@StringValue(order = 2, length = 10)
 	private String addr2;
 
-	@Order(3)
-	@Message(length = 10)
+	@StringValue(order = 3, length = 10)
 	private String addr3;
 
 	public Address(String addr1, String addr2, String addr3) {
@@ -36,6 +32,11 @@ public class Address {
 
 	public String getAddr3() {
 		return addr3;
+	}
+
+	@Override
+	public String toString() {
+		return "Address [addr1=" + addr1 + ", addr2=" + addr2 + ", addr3=" + addr3 + "]";
 	}
 
 }

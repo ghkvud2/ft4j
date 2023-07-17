@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.github.ghkvud2.ft4j.annotation.*;
+import com.github.ghkvud2.ft4j.annotation.IntValue;
+import com.github.ghkvud2.ft4j.annotation.StringValue;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
 import com.github.ghkvud2.ft4j.marshall.MarshallManager;
@@ -32,12 +33,10 @@ public class GenericTest {
 	}
 
 	public class Common<T> {
-		@Order(1)
-		@IntValue(length = 3)
+		@IntValue(order = 1, length = 3)
 		private int num;
 
-		@Order(2)
-		@Message(length = 7)
+		@StringValue(order = 2, length = 7)
 		private T data;
 
 	}

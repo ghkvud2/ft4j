@@ -22,11 +22,9 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 	public <T> T unmarshall(byte[] bytes, Class<T> clazz) {
 
 		try {
-
 			Constructor<T> constructor = clazz.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			T obj = constructor.newInstance();
-//			byte[] bytes = unMarshaller.convertToBytes(input);
 			process(bytes, 0, obj);
 			return obj;
 		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | InstantiationException
@@ -40,7 +38,7 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 	private int process(byte[] bytes, int offset, Object obj) throws IllegalArgumentException, IllegalAccessException,
 			NoSuchMethodException, SecurityException, InstantiationException, InvocationTargetException {
 
-        List<Field> fields = AnnotationUtils.getDeclaredFieldsOrdering(obj);
+        List<Field> fields = AnnotationUtils.getDeclaredFieldsWithOrderProperty(obj);
         
 		for (Field field : fields) {
 
@@ -55,13 +53,11 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 				AnnotationFieldProperty property = propertyFactory.createProperty(obj, field);
 				offset = unMarshaller.unmarshall(property, offset, bytes);
 				field.set(obj, property.getFieldValue());
-
 			} else if (fieldType.equals(String.class)) {
 				AnnotationFieldProperty property = propertyFactory.createProperty(obj, field);
 				offset = unMarshaller.unmarshall(property, offset, bytes);
 				field.set(obj, property.getFieldValue());
 			} else {
-
 				try {
 					Constructor<?> constructor = field.getType().getDeclaredConstructor();
 					Object fieldObj = constructor.newInstance();

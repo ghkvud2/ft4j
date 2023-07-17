@@ -1,5 +1,6 @@
 package com.github.ghkvud2.ft4j.exception;
 
+@Deprecated
 public class MissingOrderAnnotationException extends RuntimeException {
 
 	private static final long serialVersionUID = 7302628365160172830L;

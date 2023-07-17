@@ -50,7 +50,7 @@ public class DefaultMarshallManager implements MarshallManager {
 	private byte[] process(Object obj) throws IllegalArgumentException, IllegalAccessException, IOException,
 			NoSuchMethodException, SecurityException, InvocationTargetException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		List<Field> fields = AnnotationUtils.getDeclaredFieldsOrdering(obj);
+		List<Field> fields = AnnotationUtils.getDeclaredFieldsWithOrderProperty(obj);
 
 		for (Field field : fields) {
 

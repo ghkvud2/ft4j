@@ -7,7 +7,7 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface IntValue {
+public @interface StringValue {
 
 	int order();
 	
@@ -15,9 +15,7 @@ public @interface IntValue {
 
 	String defaultValue() default "";
 
-	PaddingByte paddingByte() default PaddingByte.ZERO;
+	PaddingByte paddingByte() default PaddingByte.SPACE;
 
-	Justify justify() default Justify.RIGHT;
-	
-	boolean ignoreLimit() default false;
+	Justify justify() default Justify.LEFT;
 }

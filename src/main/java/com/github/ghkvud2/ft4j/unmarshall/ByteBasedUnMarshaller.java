@@ -1,8 +1,5 @@
 package com.github.ghkvud2.ft4j.unmarshall;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.converter.CharsetConverter;
@@ -12,7 +9,6 @@ import com.github.ghkvud2.ft4j.property.bytes.ByteProperty;
 
 public class ByteBasedUnMarshaller implements UnMarshaller {
 
-	private final static Logger log = LoggerFactory.getLogger(ByteBasedUnMarshaller.class);
 	private final CharsetConverter converter;
 
 	public ByteBasedUnMarshaller(CharsetConverter converter) {
@@ -34,7 +30,6 @@ public class ByteBasedUnMarshaller implements UnMarshaller {
 		PaddingByte paddingByte = property.padding();
 		Justify justify = property.justify();
 
-//		log.warn("field={}, limit={}, start={}, end={}, bytes.len={}", property.getField().getName(),limit, start, end, bytes.length);
 		if (end >= bytes.length) {
 			throw new FieldValueUnderFlowException("During unmarshalling, Field value bytes underflow.");
 		}
@@ -49,7 +44,6 @@ public class ByteBasedUnMarshaller implements UnMarshaller {
 			}
 		}
 
-//		log.warn("field={}, limit={}, start={}, end={}, bytes.len={}\n", property.getField().getName(),limit, start, end, bytes.length);
 		byte[] newBytes = new byte[end - start + 1];
 		System.arraycopy(bytes, start, newBytes, 0, newBytes.length);
 

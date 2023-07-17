@@ -35,7 +35,7 @@ public class UnMarshallFactory {
 	private void registerDefaultValidators() {
 		validators.add(new ByteDecimalPropertyValidator());
 		validators.add(new ByteIntPropertyValidator());
-		validators.add(new ByteMessagePropertyValidator());
+		validators.add(new ByteStringPropertyValidator());
 	}
 
 	public UnMarshallFactory manager(UnMarshallManagerType unMarshallManagerType) {

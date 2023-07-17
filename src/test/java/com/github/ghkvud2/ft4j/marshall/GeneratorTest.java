@@ -8,8 +8,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.*;
 
 import com.github.ghkvud2.ft4j.annotation.GeneratedValue;
-import com.github.ghkvud2.ft4j.annotation.Message;
-import com.github.ghkvud2.ft4j.annotation.Order;
+import com.github.ghkvud2.ft4j.annotation.StringValue;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.*;
 import com.github.ghkvud2.ft4j.generator.Generator;
@@ -92,7 +91,7 @@ public class GeneratorTest {
 				public void run() {
 					byte[] result = marshaller.marshall(testClass);
 					assertNotEquals(convert(memory, type), convert(result, type));
-					
+
 					if (first) {
 						first = false;
 						memory = result;
@@ -107,54 +106,52 @@ public class GeneratorTest {
 	}
 
 	static class TestClass {
-		@Order(1)
+
 		@GeneratedValue(generator = UUIDGenerator.class)
-		@Message(length = 36)
+		@StringValue(order = 1, length = 36)
 		private String uuid;
 	}
 
 	static class TestClass2 {
-		@Order(1)
+
 		@GeneratedValue(generator = UUIDGenerator.class)
-		@Message(length = 32)
+		@StringValue(order = 1, length = 32)
 		private String uuid;
 	}
 
 	static class TestClass3 {
-		@Order(1)
+
 		@GeneratedValue(key = "uuid", cacheable = true, generator = UUIDGenerator.class)
-		@Message(length = 36)
+		@StringValue(order = 1, length = 36)
 		private String uuid;
 
-		@Order(2)
 		@GeneratedValue(key = "uuid", cacheable = true)
-		@Message(length = 36)
+		@StringValue(order = 2, length = 36)
 		private String uuid2;
 	}
 
 	static class TestClass4 {
-		@Order(1)
+
 		@GeneratedValue(key = "uuid", cacheable = true, generator = UUIDGenerator.class)
-		@Message(length = 36)
+		@StringValue(order = 1, length = 36)
 		private String uuid;
 
-		@Order(2)
 		@GeneratedValue(key = "uuid", generator = UUIDGenerator.class)
-		@Message(length = 36)
+		@StringValue(order = 2, length = 36)
 		private String uuid2;
 	}
 
 	static class TestClass5 {
-		@Order(1)
+
 		@GeneratedValue(key = "uuid", cacheable = true)
-		@Message(length = 36)
+		@StringValue(order = 1, length = 36)
 		private String uuid;
 	}
 
 	static class TestClass6 {
-		@Order(1)
+
 		@GeneratedValue(cacheable = true)
-		@Message(length = 36)
+		@StringValue(order = 1, length = 36)
 		private String uuid;
 	}
 

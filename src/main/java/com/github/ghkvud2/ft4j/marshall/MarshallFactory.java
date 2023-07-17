@@ -36,7 +36,7 @@ public class MarshallFactory {
 		validators.add(new ByteShortPropertyValidator());
 		validators.add(new ByteIntPropertyValidator());
 		validators.add(new ByteLongPropertyValidator());
-		validators.add(new ByteMessagePropertyValidator());
+		validators.add(new ByteStringPropertyValidator());
 	}
 
 	public MarshallFactory manager(MarshallManagerType marshallerType) {

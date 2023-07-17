@@ -7,6 +7,7 @@ import java.util.function.BiFunction;
 
 import com.github.ghkvud2.ft4j.annotation.*;
 import com.github.ghkvud2.ft4j.exception.InvalidAnnotationConfigurationException;
+import com.github.ghkvud2.ft4j.exception.MissingRequiredAnnotationException;
 import com.github.ghkvud2.ft4j.property.AbstractProperty;
 import com.github.ghkvud2.ft4j.property.bytes.*;
 
@@ -24,7 +25,8 @@ public class BytePropertyFactory implements PropertyFactory {
 		LONG_VALUE(LongValue.class, (object, field) -> new LongProperty(object, field)),
 		FLOAT_VALUE(FloatValue.class, (object, field) -> new FloatProperty(object, field)),
 		DOUBLE_VALUE(DoubleValue.class, (object, field) -> new DoubleProperty(object, field)),
-		MESSAGE(Message.class, (object, field) -> new MessageProperty(object, field));
+		STRING_VALUE(StringValue.class, (object, field) -> new StringProperty(object, field)),
+		OBJECT_VALUE(ObjectValue.class, (object, field) -> null);
 
 		private final Class<? extends Annotation> annotationType;
 		private final BiFunction<Object, Field, AbstractProperty<?>> biFunction;
@@ -46,8 +48,8 @@ public class BytePropertyFactory implements PropertyFactory {
 		public static AbstractProperty<?> createProperty(Object obj, Field field) {
 
 			return Arrays.stream(values()).filter(e -> field.isAnnotationPresent(e.getAnnotationType())).findFirst()
-					.orElseThrow(() -> new InvalidAnnotationConfigurationException(
-							"Field must have accurate annotation, but not both."))
+					.orElseThrow(() -> new MissingRequiredAnnotationException(String.format(
+							"Field %s must have accurate annotation.", field.getName())))
 					.getBiFunction().apply(obj, field);
 		}
 

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
 
 import com.github.ghkvud2.ft4j.annotation.IntValue;
-import com.github.ghkvud2.ft4j.annotation.Order;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
@@ -48,16 +47,13 @@ public class IntValueTest {
 
 	static class IntTestClass {
 
-		@Order(1)
-		@IntValue(length = 1)
+		@IntValue(order = 1, length = 1)
 		private int num1;
 
-		@Order(2)
-		@IntValue(length = 5)
+		@IntValue(order = 2, length = 5)
 		private int num2;
 
-		@Order(3)
-		@IntValue(length = 10)
+		@IntValue(order = 3, length = 10)
 		private int num3;
 
 		public IntTestClass(int num1, int num2, int num3) {
@@ -77,16 +73,13 @@ public class IntValueTest {
 
 	static class IntTestClass2 {
 
-		@Order(1)
-		@IntValue(length = 1, defaultValue = "9")
+		@IntValue(order = 1, length = 1, defaultValue = "9")
 		private int num1;
 
-		@Order(2)
-		@IntValue(length = 5, paddingByte = PaddingByte.SPACE)
+		@IntValue(order = 2, length = 5, paddingByte = PaddingByte.SPACE)
 		private int num2;
 
-		@Order(3)
-		@IntValue(length = 10, paddingByte = PaddingByte.SPACE, justify = Justify.LEFT)
+		@IntValue(order = 3, length = 10, paddingByte = PaddingByte.SPACE, justify = Justify.LEFT)
 		private int num3;
 
 		public IntTestClass2(int num1, int num2, int num3) {

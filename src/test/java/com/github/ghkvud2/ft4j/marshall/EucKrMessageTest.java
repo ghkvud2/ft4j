@@ -10,14 +10,13 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import com.github.ghkvud2.ft4j.annotation.Message;
-import com.github.ghkvud2.ft4j.annotation.Order;
+import com.github.ghkvud2.ft4j.annotation.StringValue;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
 import com.github.ghkvud2.ft4j.exception.DefaultValueExceedsLimitException;
 
-@DisplayName("Marshall - @Message 어노테이션 EUC-KR")
+@DisplayName("Marshall - @StringValue 어노테이션 EUC-KR")
 public class EucKrMessageTest {
 
 	private MarshallManager marshaller;
@@ -28,7 +27,6 @@ public class EucKrMessageTest {
 		type = ConverterType.EUC_KR;
 		marshaller = MarshallFactory.builder().converter(type).build();
 	}
-
 
 	@DisplayName("length 속성")
 	@Nested
@@ -55,9 +53,8 @@ public class EucKrMessageTest {
 		}
 
 		class User {
-			
-			@Order(1)
-			@Message(length = 10)
+
+			@StringValue(order = 1, length = 10)
 			private String name;
 
 			public User(String name) {
@@ -94,9 +91,8 @@ public class EucKrMessageTest {
 		}
 
 		class User {
-			
-			@Order(1)
-			@Message(length = 15, defaultValue = "가나다")
+
+			@StringValue(order = 1, length = 15, defaultValue = "가나다")
 			private String name;
 
 			public User(String name) {
@@ -105,9 +101,8 @@ public class EucKrMessageTest {
 		}
 
 		class User2 {
-			
-			@Order(1)
-			@Message(length = 3, defaultValue = "my name")
+
+			@StringValue(order = 1, length = 3, defaultValue = "my name")
 			private String name;
 
 			public User2(String name) {
@@ -116,9 +111,8 @@ public class EucKrMessageTest {
 		}
 
 		class User3 {
-			
-			@Order(1)
-			@Message(length = 15, defaultValue = "가나다라마바사1")
+
+			@StringValue(order = 1, length = 15, defaultValue = "가나다라마바사1")
 			private String name;
 
 			public User3(String name) {
@@ -159,9 +153,8 @@ public class EucKrMessageTest {
 		}
 
 		class User {
-			
-			@Order(1)
-			@Message(length = 5)
+
+			@StringValue(order = 1, length = 5)
 			private String name;
 
 			public User(String name) {
@@ -170,9 +163,8 @@ public class EucKrMessageTest {
 		}
 
 		class User2 {
-			
-			@Order(1)
-			@Message(length = 5, paddingByte = PaddingByte.ZERO)
+
+			@StringValue(order = 1, length = 5, paddingByte = PaddingByte.ZERO)
 			private String name;
 
 			public User2(String name) {
@@ -204,9 +196,8 @@ public class EucKrMessageTest {
 		}
 
 		class User {
-			
-			@Order(1)
-			@Message(length = 10)
+
+			@StringValue(order = 1, length = 10)
 			private String name;
 
 			public User(String name) {
@@ -215,9 +206,8 @@ public class EucKrMessageTest {
 		}
 
 		class User2 {
-			
-			@Order(1)
-			@Message(length = 10, justify = Justify.RIGHT)
+
+			@StringValue(order = 1, length = 10, justify = Justify.RIGHT)
 			private String name;
 
 			public User2(String name) {

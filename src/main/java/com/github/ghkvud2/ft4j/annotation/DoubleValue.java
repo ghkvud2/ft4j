@@ -9,6 +9,8 @@ import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 @Target(ElementType.FIELD)
 public @interface DoubleValue {
 
+	int order();
+	
 	int length();
 
 	String defaultValue() default "";

@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import com.github.ghkvud2.ft4j.annotation.DoubleValue;
 import com.github.ghkvud2.ft4j.annotation.FloatValue;
-import com.github.ghkvud2.ft4j.annotation.Order;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.annotation.constant.PaddingByte;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
@@ -62,8 +61,7 @@ public class DecimalTest {
 
 		class Bank {
 
-			@Order(1)
-			@DoubleValue(length = 10)
+			@DoubleValue(order = 1, length = 10)
 			private double rate;
 
 			public Bank(double rate) {
@@ -72,9 +70,8 @@ public class DecimalTest {
 		}
 
 		class Bank2 {
-			
-			@Order(1)
-			@FloatValue(length = 7)
+
+			@FloatValue(order = 1, length = 7)
 			private float rate;
 
 			public Bank2(float rate) {
@@ -84,8 +81,7 @@ public class DecimalTest {
 
 		class Bank3 {
 
-			@Order(1)
-			@DoubleValue(length = 7, ignoreLimit = true)
+			@DoubleValue(order = 1, length = 7, ignoreLimit = true)
 			private double rate;
 
 			public Bank3(double rate) {
@@ -136,9 +132,8 @@ public class DecimalTest {
 		}
 
 		class Bank {
-			
-			@Order(1)
-			@DoubleValue(length = 10, fractionalLength = 3)
+
+			@DoubleValue(order = 1, length = 10, fractionalLength = 3)
 			private double rate;
 
 			public Bank(double rate) {
@@ -148,8 +143,7 @@ public class DecimalTest {
 
 		class Bank2 {
 
-			@Order(1)
-			@FloatValue(length = 7, fractionalLength = 0)
+			@FloatValue(order = 1, length = 7, fractionalLength = 0)
 			private float rate;
 
 			public Bank2(float rate) {
@@ -159,8 +153,7 @@ public class DecimalTest {
 
 		class Bank3 {
 
-			@Order(1)
-			@DoubleValue(length = 7, fractionalLength = -1)
+			@DoubleValue(order = 1, length = 7, fractionalLength = -1)
 			private double rate;
 
 			public Bank3(double rate) {
@@ -207,8 +200,7 @@ public class DecimalTest {
 
 		class Bank {
 
-			@Order(1)
-			@DoubleValue(length = 10, defaultValue = "2.933")
+			@DoubleValue(order = 1, length = 10, defaultValue = "2.933")
 			private double rate;
 
 			public Bank(double rate) {
@@ -218,8 +210,7 @@ public class DecimalTest {
 
 		class Bank2 {
 
-			@Order(1)
-			@DoubleValue(length = 5, defaultValue = "2.933")
+			@DoubleValue(order = 1, length = 5, defaultValue = "2.933")
 			private double rate;
 
 			public Bank2(double rate) {
@@ -229,8 +220,7 @@ public class DecimalTest {
 
 		class Bank3 {
 
-			@Order(1)
-			@DoubleValue(length = 3, defaultValue = "2.933")
+			@DoubleValue(order = 1, length = 3, defaultValue = "2.933")
 			private double rate;
 
 			public Bank3(double rate) {
@@ -240,8 +230,7 @@ public class DecimalTest {
 
 		class Bank4 {
 
-			@Order(1)
-			@DoubleValue(length = 3, defaultValue = "A")
+			@DoubleValue(order = 1, length = 3, defaultValue = "A")
 			private double rate;
 
 			public Bank4(double rate) {
@@ -292,8 +281,7 @@ public class DecimalTest {
 
 		class Bank {
 
-			@Order(1)
-			@FloatValue(length = 10)
+			@FloatValue(order = 1, length = 10)
 			private float rate;
 
 			public Bank(float rate) {
@@ -303,8 +291,7 @@ public class DecimalTest {
 
 		class Bank2 {
 
-			@Order(1)
-			@FloatValue(length = 5, paddingByte = PaddingByte.SPACE)
+			@FloatValue(order = 1, length = 5, paddingByte = PaddingByte.SPACE)
 			private float rate;
 
 			public Bank2(float rate) {
@@ -314,8 +301,7 @@ public class DecimalTest {
 
 		class Bank3 {
 
-			@Order(1)
-			@DoubleValue(length = 10, paddingByte = PaddingByte.SPACE)
+			@DoubleValue(order = 1, length = 10, paddingByte = PaddingByte.SPACE)
 			private double rate;
 
 			public Bank3(double rate) {
@@ -349,8 +335,7 @@ public class DecimalTest {
 
 		class Bank {
 
-			@Order(1)
-			@DoubleValue(length = 10)
+			@DoubleValue(order = 1, length = 10)
 			private double rate;
 
 			public Bank(double rate) {
@@ -360,8 +345,7 @@ public class DecimalTest {
 
 		class Bank2 {
 
-			@Order(1)
-			@DoubleValue(length = 10, justify = Justify.LEFT)
+			@DoubleValue(order = 1, length = 10, justify = Justify.LEFT)
 			private double rate;
 
 			public Bank2(double rate) {
