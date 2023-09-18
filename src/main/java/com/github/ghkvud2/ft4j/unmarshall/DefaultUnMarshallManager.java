@@ -38,8 +38,8 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 	private int process(byte[] bytes, int offset, Object obj) throws IllegalArgumentException, IllegalAccessException,
 			NoSuchMethodException, SecurityException, InstantiationException, InvocationTargetException {
 
-        List<Field> fields = AnnotationUtils.getDeclaredFieldsWithOrderProperty(obj);
-        
+		List<Field> fields = AnnotationUtils.getDeclaredFieldsWithOrderProperty(obj);
+
 		for (Field field : fields) {
 
 			if (field.isSynthetic()) {
@@ -49,11 +49,7 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 			field.setAccessible(true);
 			Class<?> fieldType = field.getType();
 
-			if (fieldType.isPrimitive()) {
-				AnnotationFieldProperty property = propertyFactory.createProperty(obj, field);
-				offset = unMarshaller.unmarshall(property, offset, bytes);
-				field.set(obj, property.getFieldValue());
-			} else if (fieldType.equals(String.class)) {
+			if (fieldType.isPrimitive() || fieldType.equals(String.class)) {
 				AnnotationFieldProperty property = propertyFactory.createProperty(obj, field);
 				offset = unMarshaller.unmarshall(property, offset, bytes);
 				field.set(obj, property.getFieldValue());

@@ -12,7 +12,7 @@ import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
 import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 
 @DisplayName("Unmarshall - @StringValue 테스트")
-public class MessageValueTest {
+public class StringValueTest {
 
 	private MarshallManager marshaller;
 	private UnMarshallManager unMarshaller;
@@ -28,9 +28,9 @@ public class MessageValueTest {
 	@DisplayName("@StringValue 기본 테스트")
 	@Test
 	void basic_test() {
-		MessageTestClass input = new MessageTestClass("가", "나다", "라마바");
+		StringValueTestClass input = new StringValueTestClass("가", "나다", "라마바");
 		byte[] result = marshaller.marshall(input);
-		MessageTestClass expected = unMarshaller.unmarshall(result, MessageTestClass.class);
+		StringValueTestClass expected = unMarshaller.unmarshall(result, StringValueTestClass.class);
 		equalsObject(expected, input);
 		print(input, expected);
 	}
@@ -38,14 +38,14 @@ public class MessageValueTest {
 	@DisplayName("@StringValue 여러 속성 설정 후, 테스트")
 	@Test
 	void complex_test() {
-		MessageTestClass2 input = new MessageTestClass2("가", "나다", "라마바");
+		StringValueTestClass2 input = new StringValueTestClass2("가", "나다", "라마바");
 		byte[] result = marshaller.marshall(input);
-		MessageTestClass2 expected = unMarshaller.unmarshall(result, MessageTestClass2.class);
+		StringValueTestClass2 expected = unMarshaller.unmarshall(result, StringValueTestClass2.class);
 		equalsObject(expected, input);
 		print(input, expected);
 	}
 
-	static class MessageTestClass {
+	static class StringValueTestClass {
 
 		@StringValue(order = 1, length = 2)
 		private String num1;
@@ -56,13 +56,13 @@ public class MessageValueTest {
 		@StringValue(order = 3, length = 10)
 		private String num3;
 
-		public MessageTestClass(String num1, String num2, String num3) {
+		public StringValueTestClass(String num1, String num2, String num3) {
 			this.num1 = num1;
 			this.num2 = num2;
 			this.num3 = num3;
 		}
 
-		public MessageTestClass() {
+		public StringValueTestClass() {
 		}
 
 		@Override
@@ -71,7 +71,7 @@ public class MessageValueTest {
 		}
 	}
 
-	static class MessageTestClass2 {
+	static class StringValueTestClass2 {
 
 		@StringValue(order = 1, length = 10, defaultValue = "디폴트값")
 		private String num1;
@@ -82,13 +82,13 @@ public class MessageValueTest {
 		@StringValue(order = 3, length = 20, paddingByte = PaddingByte.ZERO, justify = Justify.RIGHT)
 		private String num3;
 
-		public MessageTestClass2(String num1, String num2, String num3) {
+		public StringValueTestClass2(String num1, String num2, String num3) {
 			this.num1 = num1;
 			this.num2 = num2;
 			this.num3 = num3;
 		}
 
-		public MessageTestClass2() {
+		public StringValueTestClass2() {
 		}
 
 		@Override
@@ -97,13 +97,13 @@ public class MessageValueTest {
 		}
 	}
 
-	private void equalsObject(MessageTestClass expected, MessageTestClass inputClass) {
+	private void equalsObject(StringValueTestClass expected, StringValueTestClass inputClass) {
 		assertEquals(expected.num1, inputClass.num1);
 		assertEquals(expected.num2, inputClass.num2);
 		assertEquals(expected.num3, inputClass.num3);
 	}
 
-	private void equalsObject(MessageTestClass2 expected, MessageTestClass2 inputClass) {
+	private void equalsObject(StringValueTestClass2 expected, StringValueTestClass2 inputClass) {
 		assertEquals(expected.num1, inputClass.num1);
 		assertEquals(expected.num2, inputClass.num2);
 		assertEquals(expected.num3, inputClass.num3);

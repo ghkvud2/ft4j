@@ -48,7 +48,6 @@ public class ByteBasedMarshaller implements Marshaller {
 			Arrays.fill(newBytes, start, end, paddingByte.getValue());
 		}
 		return newBytes;
-//		return new String(newBytes, converter.getCharset());
 	}
 
 	@Override

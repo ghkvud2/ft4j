@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.ghkvud2</groupId>
 	<artifactId>ft4j</artifactId>
-	<version>1.1</version>
+	<version>1.3</version>
 	<name>ft4j</name>
 	<description>Library that converts Java objects into strings by byte length</description>
 	<url>https://github.com/ghkvud2/ft4j</url>
