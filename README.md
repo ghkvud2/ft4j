@@ -61,7 +61,7 @@ ft4j를 사용해서 간단한 marshalling 예제를 살펴봅니다. 위에서 
 ```java
 class Person {
 
-    @StringValue(order = 1, length = 10)
+	@StringValue(order = 1, length = 10)
 	private String name;
 
 	@StringValue(order = 2, length = 20)
@@ -78,11 +78,11 @@ class Person {
 @Test
 void ft4j_marshall_test() {
 	
-    MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+	MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
     
 	byte[] expected = "John      test@gmail.com      Korea, Seoul        ".getBytes(Charset.forName("utf-8"));   
-    Person person = new Person("John", "test@gmail.com", "Korea, Seoul");
-    byte[] result = marshaller.marshall(person);
+	Person person = new Person("John", "test@gmail.com", "Korea, Seoul");
+	byte[] result = marshaller.marshall(person);
 
 	assertArrayEquals(expected, result);
 }
@@ -98,9 +98,9 @@ unmarshalling 예제를 살펴봅니다.
 @Test
 void ft4j_unmarshall_test() {
 
-   	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
+	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
 
-    byte[] input = "John      test@gmail.com      Korea, Seoul        ".getBytes(Charset.forName("utf-8"));
+	byte[] input = "John      test@gmail.com      Korea, Seoul        ".getBytes(Charset.forName("utf-8"));
 	Person person = unMarshaller.unmarshall(input, Person.class);
 
 	assertEquals("John", person.getName());
@@ -154,7 +154,7 @@ class OrderProp {
 ```java
 @Test
 void order_property() {
-    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterTypeUTF_8).build();
+	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterTypeUTF_8).build();
 	byte[] rawData = "12345678".getBytes();
     
 	OrderProp orderProp = unMarshaller.unmarshall(rawData, OrderProp.class);
@@ -190,7 +190,7 @@ void order_property() {
 
 ```java
 class Person {
-    @StringValue(order = 1, length = 10)
+	@StringValue(order = 1, length = 10)
 	private String name;
     
     //constructors, getter
@@ -223,7 +223,7 @@ void length_unmarshall_test() {
 	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
     
 	byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
-    assertEquals(10, input.length);
+	assertEquals(10, input.length);
     
 	Person person = unMarshaller.unmarshall(input, Person.class);
 	assertEquals("John", person.getName());
@@ -251,7 +251,7 @@ Person 객체를 생성할 때, name 필드에 어떤 값도 세팅하지 않더
 @Test
 void defaultValue_marshall_test() {
 
-    MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+	MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
 
 	Person person = new Person();
 	byte[] expected = "Peter     ".getBytes(Charset.forName("utf-8"));
@@ -270,15 +270,13 @@ void defaultValue_unmarshall_test() {
 
 	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
 
-    byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
+	byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
 
 	assertEquals(10, input.length);
 	Person person = unMarshaller.unmarshall(input, Person.class);
 	assertEquals("John", person.getName());
 }
 ```
-
-
 
 ##### 3.1.1.4 paddingByte 속성
 
@@ -324,7 +322,7 @@ public @interface IntValue {
 
 ```java
 class Person {
-    @StringValue(order = 1, length = 10, paddingByte = PaddingByte.ZERO)
+	@StringValue(order = 1, length = 10, paddingByte = PaddingByte.ZERO)
 	private String name;
     
     //constructors, getter
@@ -410,7 +408,7 @@ public int unmarshall(AnnotationFieldProperty property, int offset, byte[] bytes
 	int start = offset;
 	int end = offset + limit - 1;
 
-    PaddingByte paddingByte = property.padding();
+	PaddingByte paddingByte = property.padding();
 	Justify justify = property.justify();
 
 	if (end >= bytes.length) {
@@ -624,7 +622,7 @@ class Product {
 public class IntValueTest {
 
 	private MarshallManager marshallManager;
-    private Product product;
+	private Product product;
 	private Charset charset;
 
 	@BeforeEach
@@ -651,7 +649,7 @@ void length_test() {
 	byte[] expected = "0000000100".getBytes(charset);
 	byte[] result = marshallManager.marshall(product);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertArrayEquals(expected, result);
 }
 ```
@@ -704,7 +702,7 @@ void default_value_test() {
 	byte[] expected = "0000000200".getBytes(charset);
 	byte[] result = marshallManager.marshall(product);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertArrayEquals(expected, result);
 }
 ```
@@ -738,7 +736,7 @@ void padding_test() {
 	byte[] expected = "       100".getBytes(charset);
 	byte[] result = marshallManager.marshall(product);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertArrayEquals(expected, result);
 }
 ```
@@ -774,7 +772,7 @@ void justify_left_space_padding_test() {
 	byte[] expected = "100       ".getBytes(charset);
 	byte[] result = marshallManager.marshall(product);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertArrayEquals(expected, result);
 }
 ```
@@ -838,7 +836,7 @@ void length_test() {
 	String expected = "00135.8345"; // '.'도 length에 포함됩니다.
 	byte[] result = marshallManager.marshall(bank);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertEquals(expected, convert(result, charset));
 }
 ```
@@ -858,7 +856,7 @@ void ignore_limit_test() {
 	String expected = "135.8";
 	byte[] result = marshallManager.marshall(bank);
 
-    assertEquals(5, result.length);
+	assertEquals(5, result.length);
 	assertEquals(expected, convert(result, charset));
 }
 ```
@@ -878,7 +876,7 @@ void fractionalLength_test() {
 	String expected = "000135.834";
 	byte[] result = marshallManager.marshall(bank);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertEquals(expected, convert(result, charset));        
 }
 ```
@@ -896,7 +894,7 @@ void fractionalLength_test() {
 	String expected = "0000000135";
 	byte[] result = marshallManager.marshall(bank);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertEquals(expected, convert(result, charset));
 }
 ```
@@ -930,7 +928,7 @@ void default_value_test() {
 	String expected = "00000100.3";
 	byte[] result = marshallManager.marshall(bank);
 	
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertEquals(expected, convert(result, charset));
 }
 ```
@@ -1014,7 +1012,7 @@ void justify_left_test() {
 	String expected = "135.834500";
 	byte[] result = marshallManager.marshall(bank);
 
-    assertEquals(10, result.length);
+	assertEquals(10, result.length);
 	assertEquals(expected, convert(result, charset));
 }
 ```
