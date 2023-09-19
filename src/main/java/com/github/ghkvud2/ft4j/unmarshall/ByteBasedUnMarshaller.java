@@ -46,6 +46,7 @@ public class ByteBasedUnMarshaller implements UnMarshaller {
 
 		byte[] newBytes = new byte[end - start + 1];
 		System.arraycopy(bytes, start, newBytes, 0, newBytes.length);
+		newBytes = converter.toByteArray(converter.convert(newBytes), newBytes.length);
 
 		if (property.getField().getType().equals(String.class)) {
 			property.setFieldValueFromString(converter.convert(newBytes));

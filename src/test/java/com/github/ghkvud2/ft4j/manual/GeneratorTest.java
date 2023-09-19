@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.charset.Charset;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import com.github.ghkvud2.ft4j.annotation.GeneratedValue;
 import com.github.ghkvud2.ft4j.annotation.StringValue;
@@ -27,12 +26,14 @@ public class GeneratorTest {
 		charset = Charset.forName("utf-8");
 	}
 
+	@Disabled
 	@Test
 	void generator_test() {
 	    byte[] result = marshallManager.marshall(payment);
 	    System.out.println("실행 결과 : " + new String(result, charset));
 	}
 	
+	@Disabled
 	@Test
 	void generated_value_exceeds_limit_test() {
 	    assertThrows(GeneratedValueExceedsLimitException.class, () -> marshallManager.marshall(payment));

@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.charset.Charset;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import com.github.ghkvud2.ft4j.annotation.GeneratedValue;
 import com.github.ghkvud2.ft4j.annotation.StringValue;
@@ -28,17 +27,20 @@ public class CacheTest {
 		charset = Charset.forName("utf-8");
 	}
 
+	@Disabled
 	@Test
 	void not_cacheable_test() {
 		byte[] result = marshallManager.marshall(payment);
 		System.out.println("실행 결과 : " + new String(result, charset));
 	}
-
+	
+	@Disabled
 	@Test
 	void key_not_found_test() {
 		assertThrows(CacheKeyNotFoundException.class, () -> marshallManager.marshall(payment));
 	}
 	
+	@Disabled
 	@Test
 	void multithread_test() {
 

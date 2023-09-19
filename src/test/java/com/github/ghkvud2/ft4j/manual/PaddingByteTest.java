@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.Charset;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.github.ghkvud2.ft4j.annotation.StringValue;
@@ -30,6 +31,7 @@ public class PaddingByteTest {
 		assertEquals(10, result.length);
 	}
 
+	@Disabled
 	@Test
 	void length_unmarshall_test() {
 

@@ -1,47 +1,53 @@
 # User Guide
 
 ## 1.0 Introduction
+
 Full Text For Java(이하 ft4j)는 바이트 배열을 자바 객체로 변환하는 라이브러리입니다. 오늘 날 서로 다른 시스템들은 json 포맷의 데이터를 송수신합니다. 하지만 일부 도메인(ex.금융권)에서는 고정길이 문자열  방식(이하. 전문 방식)으로 데이터 송수신이 이뤄집니다.
 
 이러한 방식은 일련의 바이트 배열에 대해서 오프셋과 길이 정보를 토대로 어플리케이션에서 수동으로 자바 객체의 필드 혹은 변수로 변환하는 작업을 거칩니다.
 
+> 문자열 길이 기반으로 marshall/unmarshall을 지원하는 라이브러리는 여러가지 있었습니다.  ft4j는 다른 라이브러리들의 가장 큰 차이점은 바이트 기반의 연산을 지원한다는 것입니다. 특히, 한글의 경우 인코딩 방식에 따라 2~3바이트로 변환되는데 ft4j는 인코딩 방식에 따라 한글 문자 연산을 지원합니다. 자세한 사항은 **3.2 인코딩**을 참고하세요
+
 예를 들어 이름, 이메일, 주소로 이뤄진 유저 정보를 아래의 오프셋과 길이 기반의 전문으로 전송한다고 가정하겠습니다.
 
-|속성명|오프셋|길이|
-|-----|------|----|
-|이름|0|10|
-|이메일|10|20|
-|주소|30|20|
+| 속성명 | 오프셋 | 길이  |
+| --- | --- | --- |
+| 이름  | 0   | 10  |
+| 이메일 | 10  | 20  |
+| 주소  | 30  | 20  |
 
 총 50바이트의 유저 정보 전문을 자바 변수로 변환하기 위해서는 아래와 같은 일련의 방식을 거쳐야합니다. 
+
 ```java
 @Test
 void manual_parse_test() {
 
-	String rawData = "John      test@gmail.com      Korea, Seoul        ";
-	byte[] bytes = rawData.getBytes();
+    String rawData = "John      test@gmail.com      Korea, Seoul        ";
+    byte[] bytes = rawData.getBytes();
 
-	int offset = 0;
-	int length = 10;
-	String name = new String(Arrays.copyOfRange(bytes, offset, offset + length));
-	assertEquals("John      ", name);
+    int offset = 0;
+    int length = 10;
+    String name = new String(Arrays.copyOfRange(bytes, offset, offset + length));
+    assertEquals("John      ", name);
 
-	offset += length;
-	length = 20;
-	String email = new String(Arrays.copyOfRange(bytes, offset, offset + length));
-	assertEquals("test@gmail.com      ", email);
-	
-	offset += length;
-	length = 20;
-	String address = new String(Arrays.copyOfRange(bytes, offset, offset + length));
-	assertEquals("Korea, Seoul        ", address);
+    offset += length;
+    length = 20;
+    String email = new String(Arrays.copyOfRange(bytes, offset, offset + length));
+    assertEquals("test@gmail.com      ", email);
+
+    offset += length;
+    length = 20;
+    String address = new String(Arrays.copyOfRange(bytes, offset, offset + length));
+    assertEquals("Korea, Seoul        ", address);
 }
 ```
+
 같은 결과를 나타낼 수 있는 다양한 방식이 있겠지만, 이러한 방식의 문제는 오프셋과 길이를 하드코딩 해야하고 바이트 값을 자바 변수의 타입에 맞게 변환해줘야 하는 추가적인 작업이 필요할 수 있기 때문에 전문이 복잡해질수록 유지보수가 어렵게됩니다.
 
-
 ## 2.0 Getting Started
+
 ft4j를 사용하기 위해서, `ft4j.jar`를 어플리케이션 클래스패스에 추가하거나 의존성을 추가합니다. ft4j는 JDK 1.8 버전 이상을 요구합니다.
+
 ```xml
 <dependency>
     <groupId>com.github.ghkvud2</groupId>
@@ -61,33 +67,35 @@ ft4j를 사용해서 간단한 marshalling 예제를 살펴봅니다. 위에서 
 ```java
 class Person {
 
-	@StringValue(order = 1, length = 10)
-	private String name;
+    @StringValue(order = 1, length = 10)
+    private String name;
 
-	@StringValue(order = 2, length = 20)
-	private String email;
+    @StringValue(order = 2, length = 20)
+    private String email;
 
-	@StringValue(order = 3, length = 20)
-	private String address;
+    @StringValue(order = 3, length = 20)
+    private String address;
 
-	//constructors, getters
+    //constructors, getters
 }
 ```
 
 ```java
 @Test
 void ft4j_marshall_test() {
-	
-	MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
-    
-	byte[] expected = "John      test@gmail.com      Korea, Seoul        ".getBytes(Charset.forName("utf-8"));   
-	Person person = new Person("John", "test@gmail.com", "Korea, Seoul");
-	byte[] result = marshaller.marshall(person);
 
-	assertArrayEquals(expected, result);
+    MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+
+    byte[] expected = "John      test@gmail.com      Korea, Seoul        ".getBytes(Charset.forName("utf-8"));   
+    Person person = new Person("John", "test@gmail.com", "Korea, Seoul");
+    byte[] result = marshaller.marshall(person);
+
+    assertArrayEquals(expected, result);
 }
 ```
+
 테스트 결과를 보면, Person 객체의 필드 값들이 미리 정의된 길이에 맞춰 변환된 것을 확인할 수 있습니다.
+
 > 테스트를 실행하면 Person 객체의 필드 값이 변환될 때, 부족한 길이만큼은 공백으로 채워진 것을 볼 수 있습니다. 해당 내용은 3.1.1 공통 속성을 참고하세요.
 
 ### 2.0.2 Unmarshall Simple Example
@@ -98,41 +106,48 @@ unmarshalling 예제를 살펴봅니다.
 @Test
 void ft4j_unmarshall_test() {
 
-	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
 
-	byte[] input = "John      test@gmail.com      Korea, Seoul        ".getBytes(Charset.forName("utf-8"));
-	Person person = unMarshaller.unmarshall(input, Person.class);
+    byte[] input = "John      test@gmail.com      Korea, Seoul        ".getBytes(Charset.forName("utf-8"));
+    Person person = unMarshaller.unmarshall(input, Person.class);
 
-	assertEquals("John", person.getName());
-	assertEquals("test@gmail.com", person.getEmail());
-	assertEquals("Korea, Seoul", person.getAddress());
+    assertEquals("John", person.getName());
+    assertEquals("test@gmail.com", person.getEmail());
+    assertEquals("Korea, Seoul", person.getAddress());
 }
 ```
-> 테스트를 실행하면 rawData에서의 공백이 모두 제거된 값이 Person 객체의 필드에 저장된 것을 확인할 수 있습니다. 해당 내용은 3.1.1 공통 속성을 참고하세요.
 
+> 테스트를 실행하면 rawData에서의 공백이 모두 제거된 값이 Person 객체의 필드에 저장된 것을 확인할 수 있습니다. 해당 내용은 3.1.1 공통 속성을 참고하세요.
 
 ## 3.0 Core Concept
 
 ### 3.1 매핑 어노테이션
+
 객체의 필드에 선언할 수 있는 대표적인 어노테이션의 종류는 아래와 같습니다. 어노테이션 이름에서 알 수 있듯이 필드의 타입에 따라 선언할 어노테이션이 정해져있습니다. 만약, 올바르지 않은 어노테이션을 선언하면 예외가 발생합니다.
 
 1. @StringValue
+
 2. @FloatValue
+
 3. @DoubleValue
+
 4. @ShortValue
+
 5. @IntValue
+
 6. @LongValue
-#### 3.1.1 공통 속성
+   
+   #### 3.1.1 공통 속성
 
 위 어노테이션들이 공통적으로 갖는 속성에 대해서 살펴보겠습니다.
 
-|번호|속성명| 타입|필수여부|설명|
-|---| ------------ | ----------- | --- | ----------------- |
-|1|order|int|Y|필드들의 marshall/unmarshall 순서를 지정합니다.|
-|2| length       | int         | Y   | 해당 필드의 바이트 수를 지정합니다.                                                  |
-|3| defaultValue | String      | N   | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다.                              |
-|4| paddingByte  | PaddingByte | N   | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다. @StringValue와 같은 문자열 타입의 default 값은 SPACE고, 다른 숫자형 타입의 default 값은 ZERO입니다. |
-|5| justify      | Justify     | N   | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다. @StringValue와 같은 문자열 타입의 default 값은 LEFT고, 다른 숫자형 타입의 default 값은 RIGHT입니다. |
+| 번호  | 속성명          | 타입          | 필수여부 | 설명                                                                                                                                   |
+| --- | ------------ | ----------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | order        | int         | Y    | 필드들의 marshall/unmarshall 순서를 지정합니다.                                                                                                  |
+| 2   | length       | int         | Y    | 해당 필드의 바이트 수를 지정합니다.                                                                                                                 |
+| 3   | defaultValue | String      | N    | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다.                                                                                            |
+| 4   | paddingByte  | PaddingByte | N    | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다. @StringValue와 같은 문자열 타입의 default 값은 SPACE고, 다른 숫자형 타입의 default 값은 ZERO입니다. |
+| 5   | justify      | Justify     | N    | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다. @StringValue와 같은 문자열 타입의 default 값은 LEFT고, 다른 숫자형 타입의 default 값은 RIGHT입니다.   |
 
 ##### 3.1.1.1 order 속성
 
@@ -141,12 +156,12 @@ ft4j는 marshall/unmarshall 대상이 되는 객체 필드들의 순서를 order
 ```java
 class OrderProp {
 
-	@StringValue(order = 1, length = 4)
-	private String field1;
+    @StringValue(order = 1, length = 4)
+    private String field1;
 
-	@StringValue(order = 2, length = 4)
-	private String field2;
-    
+    @StringValue(order = 2, length = 4)
+    private String field2;
+
     //getters
 }
 ```
@@ -154,14 +169,15 @@ class OrderProp {
 ```java
 @Test
 void order_property() {
-	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterTypeUTF_8).build();
-	byte[] rawData = "12345678".getBytes();
-    
-	OrderProp orderProp = unMarshaller.unmarshall(rawData, OrderProp.class);
-	assertEquals("1234", orderProp.getField1());
-	assertEquals("5678", orderProp.getField2());
+    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterTypeUTF_8).build();
+    byte[] rawData = "12345678".getBytes();
+
+    OrderProp orderProp = unMarshaller.unmarshall(rawData, OrderProp.class);
+    assertEquals("1234", orderProp.getField1());
+    assertEquals("5678", orderProp.getField2());
 }
 ```
+
 대신, 객체 필드의 선언 순서는 그대로 두고 field1과 field2의 order 속성 값을 바꾸면 field1에는 5678, field2에는 1234이 할당됩니다. 
 
 ```java
@@ -175,12 +191,12 @@ private String field2;
 ```java
 @Test
 void order_property() {
-	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterTypeUTF_8).build();
-	byte[] rawData = "12345678".getBytes();
-    
-	OrderProp orderProp = unMarshaller.unmarshall(rawData, OrderProp.class);
-	assertEquals("5678", orderProp.getField1());
-	assertEquals("1234", orderProp.getField2());
+    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterTypeUTF_8).build();
+    byte[] rawData = "12345678".getBytes();
+
+    OrderProp orderProp = unMarshaller.unmarshall(rawData, OrderProp.class);
+    assertEquals("5678", orderProp.getField1());
+    assertEquals("1234", orderProp.getField2());
 }
 ```
 
@@ -190,9 +206,9 @@ void order_property() {
 
 ```java
 class Person {
-	@StringValue(order = 1, length = 10)
-	private String name;
-    
+    @StringValue(order = 1, length = 10)
+    private String name;
+
     //constructors, getter
 }
 ```
@@ -203,14 +219,14 @@ Person 객체의 name 필드에 "John" 이라는 4바이트 문자열을 저장�
 @Test
 void length_marshall_test() {
 
-	MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
 
-	byte[] expected = "John      ".getBytes(Charset.forName("utf-8"));
-	Person person = new Person("John");
-	byte[] result = marshaller.marshall(person);
+    byte[] expected = "John      ".getBytes(Charset.forName("utf-8"));
+    Person person = new Person("John");
+    byte[] result = marshaller.marshall(person);
 
-	assertArrayEquals(expected, result);
-	assertEquals(10, result.length);
+    assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
 }
 ```
 
@@ -219,14 +235,14 @@ void length_marshall_test() {
 ```java
 @Test
 void length_unmarshall_test() {
-    
-	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
-    
-	byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
-	assertEquals(10, input.length);
-    
-	Person person = unMarshaller.unmarshall(input, Person.class);
-	assertEquals("John", person.getName());
+
+    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
+
+    byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
+    assertEquals(10, input.length);
+
+    Person person = unMarshaller.unmarshall(input, Person.class);
+    assertEquals("John", person.getName());
 }
 ```
 
@@ -238,9 +254,9 @@ void length_unmarshall_test() {
 
 ```java
 class Person {
-	@StringValue(order = 1, length = 10, defaultValue = "Peter")
-	private String name;
-    
+    @StringValue(order = 1, length = 10, defaultValue = "Peter")
+    private String name;
+
     //constructors, getter
 }
 ```
@@ -251,14 +267,14 @@ Person 객체를 생성할 때, name 필드에 어떤 값도 세팅하지 않더
 @Test
 void defaultValue_marshall_test() {
 
-	MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
 
-	Person person = new Person();
-	byte[] expected = "Peter     ".getBytes(Charset.forName("utf-8"));
-	byte[] result = marshaller.marshall(person);
+    Person person = new Person();
+    byte[] expected = "Peter     ".getBytes(Charset.forName("utf-8"));
+    byte[] result = marshaller.marshall(person);
 
-	assertArrayEquals(expected, result);
-	assertEquals(10, result.length);
+    assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
 }
 ```
 
@@ -268,34 +284,34 @@ void defaultValue_marshall_test() {
 @Test
 void defaultValue_unmarshall_test() {
 
-	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
 
-	byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
+    byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
 
-	assertEquals(10, input.length);
-	Person person = unMarshaller.unmarshall(input, Person.class);
-	assertEquals("John", person.getName());
+    assertEquals(10, input.length);
+    Person person = unMarshaller.unmarshall(input, Person.class);
+    assertEquals("John", person.getName());
 }
 ```
 
 ##### 3.1.1.4 paddingByte 속성
 
-length 속성과 밀접한 연관이 있는 속성입니다. marshalling할 때 우선 length 속성만큼의 길이를 갖는 바이트 배열을 생성하고 필드 값을 할당합니다. 만약 필드 값을 모두 할당하고도 바이트 배열에 비어있는 공간이 있다면 paddingByte 속성 값으로 채우게 됩니다. 반대로 marshalling할 때, 바이트 배열의 paddingByte 속성 값에 해당하는 값은 제외하고 객체의 필드에 값을 할당합니다. @StringValue처럼 문자열 타입의 어노테이션은 default 값이 PaddingByte.SPACE이며 숫자 타입의 어노테이션은 default 값이 PaddingByte.ZERO입니다. 아래 @StringValue와 @IntValue 어노테이션 소스 코드를 보면 PaddingByte의 default 값을 확인할 수 있습니다.
+length 속성과 밀접한 연관이 있는 속성입니다. marshalling할 때 우선 length 속성만큼의 길이를 갖는 바이트 배열을 생성하고 필드 값을 할당합니다. 만약 필드 값을 모두 할당하고도 바이트 배열에 비어있는 공간이 있다면 paddingByte 속성 값으로 채우게 됩니다. 반대로 unmarshalling할 때, 바이트 배열의 paddingByte 속성 값에 해당하는 값은 제외하고 객체의 필드에 값을 할당합니다. @StringValue처럼 문자열 타입의 어노테이션은 default 값이 PaddingByte.SPACE이며 숫자 타입의 어노테이션은 default 값이 PaddingByte.ZERO입니다. 아래 @StringValue와 @IntValue 어노테이션 소스 코드를 보면 PaddingByte의 default 값을 확인할 수 있습니다.
 
 ```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface StringValue {
 
-	int order();
-	
-	int length();
+    int order();
 
-	String defaultValue() default "";
+    int length();
 
-	PaddingByte paddingByte() default PaddingByte.SPACE;
+    String defaultValue() default "";
 
-	Justify justify() default Justify.LEFT;
+    PaddingByte paddingByte() default PaddingByte.SPACE;
+
+    Justify justify() default Justify.LEFT;
 }
 ```
 
@@ -304,17 +320,17 @@ public @interface StringValue {
 @Target(ElementType.FIELD)
 public @interface IntValue {
 
-	int order();
-	
-	int length();
+    int order();
 
-	String defaultValue() default "";
+    int length();
 
-	PaddingByte paddingByte() default PaddingByte.ZERO;
+    String defaultValue() default "";
 
-	Justify justify() default Justify.RIGHT;
-	
-	boolean ignoreLimit() default false;
+    PaddingByte paddingByte() default PaddingByte.ZERO;
+
+    Justify justify() default Justify.RIGHT;
+
+    boolean ignoreLimit() default false;
 }
 ```
 
@@ -322,9 +338,9 @@ public @interface IntValue {
 
 ```java
 class Person {
-	@StringValue(order = 1, length = 10, paddingByte = PaddingByte.ZERO)
-	private String name;
-    
+    @StringValue(order = 1, length = 10, paddingByte = PaddingByte.ZERO)
+    private String name;
+
     //constructors, getter
 }
 ```
@@ -333,16 +349,16 @@ class Person {
 @Test
 void length_marshall_test() {
 
-	MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
-       
-	byte[] expected = "John000000".getBytes(Charset.forName("utf-8")); 
-    
+    MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+
+    byte[] expected = "John000000".getBytes(Charset.forName("utf-8")); 
+
     //바이트 배열에 John이라는 문자열을 채우고 나머지 빈 부분은 ZERO로 채움
-   	Person person = new Person("John");
-	byte[] result = marshaller.marshall(person);
-    
-	assertArrayEquals(expected, result);
-	assertEquals(10, result.length);
+       Person person = new Person("John");
+    byte[] result = marshaller.marshall(person);
+
+    assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
 }
 ```
 
@@ -350,27 +366,25 @@ void length_marshall_test() {
 @Test
 void length_unmarshall_test() {
 
-	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
-	byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
-                                                         
-	assertEquals(10, input.length);
-	Person person = unMarshaller.unmarshall(input, Person.class);
-    
-	//객체 필드에 값을 세팅할 때, paddingByte값을 제거하고 할당하는데 현재 paddingByte 속성 값이 ZERO이므로
+    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    byte[] input = "John      ".getBytes(Charset.forName("utf-8"));
+
+    assertEquals(10, input.length);
+    Person person = unMarshaller.unmarshall(input, Person.class);
+
+    //객체 필드에 값을 세팅할 때, paddingByte값을 제거하고 할당하는데 현재 paddingByte 속성 값이 ZERO이므로
     //name 필드에 "John"이 아닌 "John      "이 할당됨
-	assertEquals("John      ", person.getName());
-    
+    assertEquals("John      ", person.getName());
+
     //input 바이트 배열에 빈 공간을 ZERO 채우고 unmarshalling을 수행하면 현재 paddingByte 속성 값이 ZERO이므로
     //name 필드에 ZERO를 제거한 "John" 문자열이 할당됨
-	input = "John000000".getBytes(Charset.forName("utf-8"));
-	person = unMarshaller.unmarshall(input, Person.class);
-	assertEquals("John", person.getName());
+    input = "John000000".getBytes(Charset.forName("utf-8"));
+    person = unMarshaller.unmarshall(input, Person.class);
+    assertEquals("John", person.getName());
 }
 ```
 
 > 금융권에서 일반적으로 사용하는 전문 방식은 문자열은 SPACE로 padding하고 왼쪽 정렬, 숫자형은 ZERO로 padding하고 오른쪽 정렬을 합니다. 정렬과 관련된 부분은 바로 아래 justify 속성에서 살펴봅니다. 
-
-
 
 ##### 3.1.1.5 justify 속성
 
@@ -378,9 +392,9 @@ marshalling할 때 객체의 필드 값을 바이트 배열의 어느 방향부�
 
 ```java
 class Person {
-	@StringValue(order = 1, length = 10, justify = Justify.RIGHT)
-	private String name;
-    
+    @StringValue(order = 1, length = 10, justify = Justify.RIGHT)
+    private String name;
+
     //constructors, getter
 }
 ```
@@ -388,14 +402,14 @@ class Person {
 ```java
 @Test
 void justify_marshall_test() {
-	MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
-	Person person = new Person("John");
-    
-	byte[] expected = "      John".getBytes(Charset.forName("utf-8"));
-	byte[] result = marshaller.marshall(person);
-    
-	assertArrayEquals(expected, result);
-	assertEquals(10, result.length);
+    MarshallManager marshaller = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    Person person = new Person("John");
+
+    byte[] expected = "      John".getBytes(Charset.forName("utf-8"));
+    byte[] result = marshaller.marshall(person);
+
+    assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
 }
 ```
 
@@ -404,49 +418,48 @@ void justify_marshall_test() {
 ```java
 @Override
 public int unmarshall(AnnotationFieldProperty property, int offset, byte[] bytes) {
-	int limit = property.length();
-	int start = offset;
-	int end = offset + limit - 1;
+    int limit = property.length();
+    int start = offset;
+    int end = offset + limit - 1;
 
-	PaddingByte paddingByte = property.padding();
-	Justify justify = property.justify();
+    PaddingByte paddingByte = property.padding();
+    Justify justify = property.justify();
 
-	if (end >= bytes.length) {
-		throw new FieldValueUnderFlowException("During unmarshalling, Field value bytes underflow.");
-	}
+    if (end >= bytes.length) {
+        throw new FieldValueUnderFlowException("During unmarshalling, Field value bytes underflow.");
+    }
 
-	if (justify == Justify.LEFT) {
-        
-		//Justify.LEFT인 경우에는 오른쪽부터 시작하여 paddingByte에 해당하는 인덱스는 건너뜀
-		while (start <= end && paddingByte.getValue() == bytes[end]) {
-			end--;
-		}
-	} else if (justify == Justify.RIGHT) {
-        
-		//Justify.RIGHT인 경우에는 왼쪽부터 시작하여 paddingByte에 해당하는 인덱스는 건너뜀
-		while (start <= end && paddingByte.getValue() == bytes[start]) {
-			start++;
-		}
-	}
+    if (justify == Justify.LEFT) {
+
+        //Justify.LEFT인 경우에는 오른쪽부터 시작하여 paddingByte에 해당하는 인덱스는 건너뜀
+        while (start <= end && paddingByte.getValue() == bytes[end]) {
+            end--;
+        }
+    } else if (justify == Justify.RIGHT) {
+
+        //Justify.RIGHT인 경우에는 왼쪽부터 시작하여 paddingByte에 해당하는 인덱스는 건너뜀
+        while (start <= end && paddingByte.getValue() == bytes[start]) {
+            start++;
+        }
+    }
     //.....
 }
 ```
 
-아래 테스트 코드를 보면 Justify 속성 값이 RIGHT이고, paddingByte는 SPACE이므로 "      John"에서 처음으로 SPACE가 아닌 J 문자가 나오는 인덱스부터 마지막 인덱스까지의 값을 객체 필드에 저장하게됩니다.
+아래 테스트 코드를 보면 Justify 속성 값이 RIGHT이고, paddingByte는 SPACE이므로 "      John"이라는 문자열에서 처음으로 SPACE가 아닌 J 문자가 나오는 인덱스부터 마지막 인덱스까지의 값을 객체 필드에 저장하게됩니다.
 
 ```java
 @Test
 void justify_unmarshall_test() {
-	UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
-    
-	byte[] input = "      John".getBytes(Charset.forName("utf-8"));
-	assertEquals(10, input.length);
-    
-	Person person = unMarshaller.unmarshall(input, Person.class);
-	assertEquals("John", person.getName());
+    UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
+
+    byte[] input = "      John".getBytes(Charset.forName("utf-8"));
+    assertEquals(10, input.length);
+
+    Person person = unMarshaller.unmarshall(input, Person.class);
+    assertEquals("John", person.getName());
 }
 ```
-
 
 ---
 
@@ -454,13 +467,13 @@ void justify_unmarshall_test() {
 
 String 타입에 선언할 수 있는 어노테이션입니다. 주요 속성 값은 아래와 같습니다.
 
-| 번호 | 속성명       | 타입        | 필수 | 기본 값           | 설명                                                         |
-| ---- | ------------ | ----------- | ---- | ----------------- | ------------------------------------------------------------ |
-| 1    | order        | int         | Y    |                   | 필드들의 marshall/unmarshall 순서를 지정합니다.              |
-| 2    | length       | int         | Y    |                   | 해당 필드의 바이트 수를 지정합니다.                          |
-| 3    | defaultValue | String      | N    | Empty String      | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다. |
-| 4    | paddingByte  | PaddingByte | N    | PaddingByte.SPACE | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다. |
-| 5    | justify      | Justify     | N    | Justify.LEFT      | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다. |
+| 번호  | 속성명          | 타입          | 필수  | 기본 값              | 설명                                                        |
+| --- | ------------ | ----------- | --- | ----------------- | --------------------------------------------------------- |
+| 1   | order        | int         | Y   |                   | 필드들의 marshall/unmarshall 순서를 지정합니다.                       |
+| 2   | length       | int         | Y   |                   | 해당 필드의 바이트 수를 지정합니다.                                      |
+| 3   | defaultValue | String      | N   | Empty String      | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다.                 |
+| 4   | paddingByte  | PaddingByte | N   | PaddingByte.SPACE | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다. |
+| 5   | justify      | Justify     | N   | Justify.LEFT      | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다.   |
 
 ##### 3.1.1.1 length
 
@@ -476,16 +489,16 @@ class User {
 ```java
 public class StringValueTest {
 
-	private MarshallManager marshallManager;
-	private User user;
-	private Charset charset;
+    private MarshallManager marshallManager;
+    private User user;
+    private Charset charset;
 
-	@BeforeEach
-	void setUp() {
-		marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
-		user = new User("John");
-		charset = Charset.forName("utf-8");
-	}
+    @BeforeEach
+    void setUp() {
+        marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+        user = new User("John");
+        charset = Charset.forName("utf-8");
+    }
 
      // @Test Method......   
 }
@@ -502,11 +515,11 @@ private String name;
 @Test
 void length_test() {
 
-	byte[] expected = "John           ".getBytes(charset);
-	byte[] result = marshallManager.marshall(user);
+    byte[] expected = "John           ".getBytes(charset);
+    byte[] result = marshallManager.marshall(user);
 
-	assertEquals(15, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(15, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -520,11 +533,11 @@ private String name;
 ```java
 @Test
 void exceed_length_test() {
-	byte[] expected = "Joh".getBytes(charset);
-	byte[] result = marshallManager.marshall(user);
+    byte[] expected = "Joh".getBytes(charset);
+    byte[] result = marshallManager.marshall(user);
 
-	assertEquals(3, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(3, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -540,11 +553,11 @@ private String name;
 ```java
 @Test
 void default_value_test() {
-	byte[] expected = "my name        ".getBytes(charset);
-	byte[] result = marshallManager.marshall(user);
+    byte[] expected = "my name        ".getBytes(charset);
+    byte[] result = marshallManager.marshall(user);
 
-	assertEquals(15, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(15, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -560,11 +573,11 @@ private String name;
 ```java
 @Test
 void padding_test() {
-	byte[] expected = "John00000000000".getBytes(charset);
-	byte[] result = marshallManager.marshall(user);
+    byte[] expected = "John00000000000".getBytes(charset);
+    byte[] result = marshallManager.marshall(user);
 
-	assertEquals(15, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(15, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -580,11 +593,11 @@ private String name;
 ```java
 @Test
 void justify_right_test() {
-	byte[] expected = "           John".getBytes(charset);
-	byte[] result = marshallManager.marshall(user);
+    byte[] expected = "           John".getBytes(charset);
+    byte[] result = marshallManager.marshall(user);
 
-	assertEquals(15, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(15, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -592,14 +605,14 @@ void justify_right_test() {
 
 객체의 short, int, long 타입의 필드에 선언할 수 있는 어노테이션입니다. 주요 속성 값은 아래와 같습니다. 세 어노테이션의 사용법은 모두 같습니다.
 
-| 번호 | 속성명       | 타입        | 필수 | 기본 값          | 설명                                                         |
-| ---- | ------------ | ----------- | ---- | ---------------- | ------------------------------------------------------------ |
-| 1    | order        | int         | Y    |                  | 필드들의 marshall/unmarshall 순서를 지정합니다.              |
-| 2    | length       | int         | Y    |                  | 해당 필드의 바이트 수를 지정합니다.                          |
-| 3    | defaultValue | String      | N    | Empty String     | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다. |
-| 4    | paddingByte  | PaddingByte | N    | PaddingByte.ZERO | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다. |
-| 5    | justify      | Justify     | N    | Justify.RIGHT    | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다. |
-| 6    | ignoreLimit  | boolean     | N    | false            | length 속성 값이 필드 값의 바이트 수보다 더 작을 때, 예외를 발생시킬지 여부를 결정합니다. 기본 값은 false이며, 이 경우 예외가 발생합니다. |
+| 번호  | 속성명          | 타입          | 필수  | 기본 값             | 설명                                                                                     |
+| --- | ------------ | ----------- | --- | ---------------- | -------------------------------------------------------------------------------------- |
+| 1   | order        | int         | Y   |                  | 필드들의 marshall/unmarshall 순서를 지정합니다.                                                    |
+| 2   | length       | int         | Y   |                  | 해당 필드의 바이트 수를 지정합니다.                                                                   |
+| 3   | defaultValue | String      | N   | Empty String     | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다.                                              |
+| 4   | paddingByte  | PaddingByte | N   | PaddingByte.ZERO | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다.                              |
+| 5   | justify      | Justify     | N   | Justify.RIGHT    | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다.                                |
+| 6   | ignoreLimit  | boolean     | N   | false            | length 속성 값이 필드 값의 바이트 수보다 더 작을 때, 예외를 발생시킬지 여부를 결정합니다. 기본 값은 false이며, 이 경우 예외가 발생합니다. |
 
 > String 타입의 필드를 처리하는 @StringValue 어노테이션은 필드 값이 length 속성 값보다 더 작을 때, 예외를 발생시키지 않고 length 속성 값에 맞춰 바이트를 잘라서 문자열을 생성했습니다. 그러나 정수형 필드에 선언될 수 있는 어노테이션들은 length 길이에 맞춰 필드 값을 자르게되면 기존 필드 값과는 전혀 다른 의미의 값을 나타내게 됩니다.
 > 
@@ -621,16 +634,16 @@ class Product {
 ```java
 public class IntValueTest {
 
-	private MarshallManager marshallManager;
-	private Product product;
-	private Charset charset;
+    private MarshallManager marshallManager;
+    private Product product;
+    private Charset charset;
 
-	@BeforeEach
-	void setUp() {
-		marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
-		product = new Product(100);
-		charset = Charset.forName("utf-8");
-	}
+    @BeforeEach
+    void setUp() {
+        marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+        product = new Product(100);
+        charset = Charset.forName("utf-8");
+    }
 
      // @Test Method......   
 }
@@ -646,11 +659,11 @@ private int price;
 ```java
 @Test
 void length_test() {
-	byte[] expected = "0000000100".getBytes(charset);
-	byte[] result = marshallManager.marshall(product);
+    byte[] expected = "0000000100".getBytes(charset);
+    byte[] result = marshallManager.marshall(product);
 
-	assertEquals(10, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -680,10 +693,10 @@ private String name;
 ```java
 @Test
 void ignore_limit_test() {
-	byte[] expected = "10".getBytes(charset);
-	byte[] result = marshallManager.marshall(product);
-	assertEquals(2, result.length);
-	assertArrayEquals(expected, result);
+    byte[] expected = "10".getBytes(charset);
+    byte[] result = marshallManager.marshall(product);
+    assertEquals(2, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -699,11 +712,11 @@ private int price;
 ```java
 @Test
 void default_value_test() {
-	byte[] expected = "0000000200".getBytes(charset);
-	byte[] result = marshallManager.marshall(product);
+    byte[] expected = "0000000200".getBytes(charset);
+    byte[] result = marshallManager.marshall(product);
 
-	assertEquals(10, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -717,7 +730,7 @@ private String name;
 ```java
 @Test
 void convert_exception() {
-	assertThrows(NumberFormatException.class, ()->marshallManager.marshall(product));
+    assertThrows(NumberFormatException.class, ()->marshallManager.marshall(product));
 }
 ```
 
@@ -733,11 +746,11 @@ private int price;
 ```java
 @Test
 void padding_test() {
-	byte[] expected = "       100".getBytes(charset);
-	byte[] result = marshallManager.marshall(product);
+    byte[] expected = "       100".getBytes(charset);
+    byte[] result = marshallManager.marshall(product);
 
-	assertEquals(10, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -769,11 +782,11 @@ private int price;
 ```java
 @Test
 void justify_left_space_padding_test() {
-	byte[] expected = "100       ".getBytes(charset);
-	byte[] result = marshallManager.marshall(product);
+    byte[] expected = "100       ".getBytes(charset);
+    byte[] result = marshallManager.marshall(product);
 
-	assertEquals(10, result.length);
-	assertArrayEquals(expected, result);
+    assertEquals(10, result.length);
+    assertArrayEquals(expected, result);
 }
 ```
 
@@ -781,15 +794,15 @@ void justify_left_space_padding_test() {
 
 객체의 float, double 타입의 필드에 선언할 수 있는 어노테이션입니다. 주요 속성 값은 아래와 같습니다. 두 어노테이션의 사용법은 모두 같습니다.
 
-| 번호 | 속성명           | 타입        | 필수 | 기본 값          | 설명                                                         |
-| ---- | ---------------- | ----------- | ---- | ---------------- | ------------------------------------------------------------ |
-| 1    | order            | int         | Y    |                  | 필드들의 marshall/unmarshall 순서를 지정합니다.              |
-| 2    | length           | int         | Y    |                  | 해당 필드의 바이트 수를 지정합니다.                          |
-| 3    | defaultValue     | String      | N    | Empty String     | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다. |
-| 4    | paddingByte      | PaddingByte | N    | PaddingByte.ZERO | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다. |
-| 5    | justify          | Justify     | N    | Justify.RIGHT    | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다. |
-| 6    | ignoreLimit      | boolean     | N    | false            | length 속성 값이 필드 값의 바이트 수보다 더 작을 때, 예외를 발생시킬지 여부를 결정합니다. 기본 값은 false이며, 이 경우 예외가 발생합니다. |
-| 7    | fractionalLength | int         | N    | -1               | 소수점 이하를 표시합니다. 기본 값은 -1이며 소수점 자리수를 그대로 유지합니다. 0은 소수점 자리수를 표시하지 않습니다. 양수는 그 값만큼의 소수점 자리수를 유지합니다. 해당 속성 값으로 인해 확장되는 소수점 자리수와 정수부, 그리고 '.'을 포함하여 length 속성 값보다 작거나 같아야 합니다. 단, ignoreLimit을 true로 설정할 경우 주의해야합니다. |
+| 번호  | 속성명              | 타입          | 필수  | 기본 값             | 설명                                                                                                                                                                                                             |
+| --- | ---------------- | ----------- | --- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | order            | int         | Y   |                  | 필드들의 marshall/unmarshall 순서를 지정합니다.                                                                                                                                                                            |
+| 2   | length           | int         | Y   |                  | 해당 필드의 바이트 수를 지정합니다.                                                                                                                                                                                           |
+| 3   | defaultValue     | String      | N   | Empty String     | marshall 연산시, 현재 필드 값에 상관없이 해당 값으로 대체합니다.                                                                                                                                                                      |
+| 4   | paddingByte      | PaddingByte | N   | PaddingByte.ZERO | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 나머지 바이트를 채울 값을 지정합니다.                                                                                                                                                      |
+| 5   | justify          | Justify     | N   | Justify.RIGHT    | length 속성 값이 필드에 저장된 바이트 수보다 더 클 때, 필드 값의 정렬 방식을 지정합니다.                                                                                                                                                        |
+| 6   | ignoreLimit      | boolean     | N   | false            | length 속성 값이 필드 값의 바이트 수보다 더 작을 때, 예외를 발생시킬지 여부를 결정합니다. 기본 값은 false이며, 이 경우 예외가 발생합니다.                                                                                                                         |
+| 7   | fractionalLength | int         | N   | -1               | 소수점 이하를 표시합니다. 기본 값은 -1이며 소수점 자리수를 그대로 유지합니다. 0은 소수점 자리수를 표시하지 않습니다. 양수는 그 값만큼의 소수점 자리수를 유지합니다. 해당 속성 값으로 인해 확장되는 소수점 자리수와 정수부, 그리고 '.'을 포함하여 length 속성 값보다 작거나 같아야 합니다. 단, ignoreLimit을 true로 설정할 경우 주의해야합니다. |
 
 ##### 3.1.3.1 length
 
@@ -813,13 +826,13 @@ public class DecimalTest {
         marshaller = MarshallerFactory.builder().encoder(EncoderType.UTF_8).build();
         bank = new Bank(135.8345);
     }
-	
-    //테스트에 사용될 util 메소드
-   	public static String convert(byte[] bytes, Charset charset) {
-		return new String(bytes, charset);
-	}
 
-	// @Test Method......
+    //테스트에 사용될 util 메소드
+       public static String convert(byte[] bytes, Charset charset) {
+        return new String(bytes, charset);
+    }
+
+    // @Test Method......
 }
 ```
 
@@ -833,11 +846,11 @@ private double rate;
 ```java
 @Test
 void length_test() {
-	String expected = "00135.8345"; // '.'도 length에 포함됩니다.
-	byte[] result = marshallManager.marshall(bank);
+    String expected = "00135.8345"; // '.'도 length에 포함됩니다.
+    byte[] result = marshallManager.marshall(bank);
 
-	assertEquals(10, result.length);
-	assertEquals(expected, convert(result, charset));
+    assertEquals(10, result.length);
+    assertEquals(expected, convert(result, charset));
 }
 ```
 
@@ -853,11 +866,11 @@ private double rate;
 ```java
 @Test
 void ignore_limit_test() {
-	String expected = "135.8";
-	byte[] result = marshallManager.marshall(bank);
+    String expected = "135.8";
+    byte[] result = marshallManager.marshall(bank);
 
-	assertEquals(5, result.length);
-	assertEquals(expected, convert(result, charset));
+    assertEquals(5, result.length);
+    assertEquals(expected, convert(result, charset));
 }
 ```
 
@@ -873,11 +886,11 @@ private double rate;
 ```java
 @Test
 void fractionalLength_test() {
-	String expected = "000135.834";
-	byte[] result = marshallManager.marshall(bank);
+    String expected = "000135.834";
+    byte[] result = marshallManager.marshall(bank);
 
-	assertEquals(10, result.length);
-	assertEquals(expected, convert(result, charset));        
+    assertEquals(10, result.length);
+    assertEquals(expected, convert(result, charset));        
 }
 ```
 
@@ -891,11 +904,11 @@ private double rate;
 ```java
 @Test
 void fractionalLength_test() {
-	String expected = "0000000135";
-	byte[] result = marshallManager.marshall(bank);
+    String expected = "0000000135";
+    byte[] result = marshallManager.marshall(bank);
 
-	assertEquals(10, result.length);
-	assertEquals(expected, convert(result, charset));
+    assertEquals(10, result.length);
+    assertEquals(expected, convert(result, charset));
 }
 ```
 
@@ -925,11 +938,11 @@ private double rate;
 ```java
 @Test
 void default_value_test() {
-	String expected = "00000100.3";
-	byte[] result = marshallManager.marshall(bank);
-	
-	assertEquals(10, result.length);
-	assertEquals(expected, convert(result, charset));
+    String expected = "00000100.3";
+    byte[] result = marshallManager.marshall(bank);
+
+    assertEquals(10, result.length);
+    assertEquals(expected, convert(result, charset));
 }
 ```
 
@@ -1009,11 +1022,11 @@ private double rate;
 ```java
 @Test
 void justify_left_test() {
-	String expected = "135.834500";
-	byte[] result = marshallManager.marshall(bank);
+    String expected = "135.834500";
+    byte[] result = marshallManager.marshall(bank);
 
-	assertEquals(10, result.length);
-	assertEquals(expected, convert(result, charset));
+    assertEquals(10, result.length);
+    assertEquals(expected, convert(result, charset));
 }
 ```
 
@@ -1027,15 +1040,13 @@ private double rate;
 ```java
 @Test
 void justify_left_space_padding_test() {
-	String expected = "135.8345  ";
-	byte[] result = marshallManager.marshall(bank);
-    
-	assertEquals(10, result.length);
-	assertEquals(expected, convert(result, charset));
+    String expected = "135.8345  ";
+    byte[] result = marshallManager.marshall(bank);
+
+    assertEquals(10, result.length);
+    assertEquals(expected, convert(result, charset));
 }
 ```
-
-
 
 #### 3.1.4 @GeneratedValue
 
@@ -1085,15 +1096,15 @@ class Payment {
 public class GeneratorTest {
 
     private Marshaller marshaller;
-	private Payment payment;
-	private Charset charset;
+    private Payment payment;
+    private Charset charset;
 
-	@BeforeEach
-	void setUp() {
-		marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
-		payment = new Payment();
-		charset = Charset.forName("utf-8");
-	}
+    @BeforeEach
+    void setUp() {
+        marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+        payment = new Payment();
+        charset = Charset.forName("utf-8");
+    }
 
      // @Test Method......   
 }
@@ -1169,8 +1180,8 @@ private String cachedId;
 ```java
 @Test
 void cacheable_test() {
-	byte[] result = marshallManager.marshall(payment);
-	System.out.println("실행 결과 : " + new String(result, charset));
+    byte[] result = marshallManager.marshall(payment);
+    System.out.println("실행 결과 : " + new String(result, charset));
 }
 ```
 
@@ -1198,8 +1209,8 @@ private String notCachedId;
 ```java
 @Test
 void not_cacheable_test() {
-	byte[] result = marshallManager.marshall(payment);
-	System.out.println("실행 결과 : " + new String(result, charset));
+    byte[] result = marshallManager.marshall(payment);
+    System.out.println("실행 결과 : " + new String(result, charset));
 }
 ```
 
@@ -1273,11 +1284,11 @@ void multithread_test() {
 
     for(int i = 0 ; i < 5; i++) {
         Runnable thread = () -> {
-        	byte[] result = marshallManager.marshall(payment);
-    		System.out.println("실행 결과 : " + new String(result, charset));
+            byte[] result = marshallManager.marshall(payment);
+            System.out.println("실행 결과 : " + new String(result, charset));
         };
         thread.run();
-    }	
+    }    
 }
 ```
 
@@ -1290,3 +1301,172 @@ void multithread_test() {
 실행 결과 : 1d471c42-be9c-4b08-8c34-75cd7592188a     1d471c42-be9c-4b08-8c34-75cd7592188a
 실행 결과 : fa455e86-9a0e-4491-a02f-05e81a2b251f     fa455e86-9a0e-4491-a02f-05e81a2b251f
 ```
+
+### 3.2 인코딩
+
+ft4j는 EUC-KR과 UTF-8 인코딩 방식을 지원합니다. ft4j는 바이트 길이 기반으로 동작하기 때문에 어떤 인코딩 방식을 사용하는지에 따라서 결과 값이 달라집니다. 예를 들어, 한글은 EUC-KR 인코딩 방식에서는 2바이트로 표현되며 UTF-8 인코딩 방식으로는 3바이트로 표현됩니다.
+
+아래 예시에서 MarshallManager, UnMarshallManager를 생성할 때 ConverterType을 전달하는 것을 볼 수 있습니다.
+
+```java
+public enum ConverterType {
+    EUC_KR, UTF_8
+}
+```
+
+```java
+MarshallManager marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+
+UnMarshallManager unMarshaller = UnMarshallFactory.builder().converter(ConverterType.EUC_KR).build();
+```
+
+#### 3.2.1 Marshall 테스트
+
+ft4j는 바이트 배열을 length 속성 값에 맞춰 marshall/unmarshall을 수행하므로 일련의 바이트로 표현된 원본 데이터가 온전하지 않을 수 있습니다. ft4j는 연산의 결과로 이렇게 불완전한 데이터가 발생할 경우, 데이터를 공백으로 치환하는 로직을 포함하고 있습니다.
+
+String 타입의 name필드를 갖는 User클래스를 아래와 같이 작성합니다. 테스트에 사용될 Marshaller객체를 utf-8 인코딩을 사용하여 생성합니다.
+
+```java
+class User {
+    private String name;
+    //constructor, getter, setter
+}
+
+public class EncodingTest {
+
+    private MarshallManager marshallManager;
+
+    @BeforeEach
+    void setUp() {
+        marshallManager = MarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    }
+
+    // @Test Method......
+}
+```
+
+@StringValue 어노테이션에 length 속성 값을 4로 설정하고 name 필드에 길이가 5인 "Smith" 문자열을 할당했습니다. 이때 name 필드 값을 length 속성 값만큼 잘라 바이트 배열로 marshalling 했습니다.
+
+```java
+@StringValue(order = 1, length = 4)
+private String name;
+```
+
+```java
+@Test
+void utf8_english_test() {
+
+    User user = new User("Smith");
+    byte[] result = marshallManager.marshall(user);    
+    byte[] expected = "Smit".getBytes(Charset.forName("utf-8"));
+
+    assertEquals(4, result.length);
+    assertArrayEquals(expected, result);
+}
+```
+
+name 필드에 한글 문자열 "스미스"를 할당하면 어떻게되는지 보겠습니다. utf-8 인코딩 방식에서 한글은 3바이트를 차지합니다. "스미스"의 첫 번째 글자 "스"에 해당하는 바이트에 온전히 3바이트를 할당할 수 있습니다. 그러나 두 번째 글자 "미"에 나머지 1바이트만 할당하면 "미"라는 한글을 온전히 표현할 수 없습니다. 이때, ft4j는 나머지 1바이트에 대해서 공백으로 채웁니다.
+
+```java
+@Test
+void utf8_kor_test() {
+    User user = new User("스미스");
+    byte[] result = marshallManager.marshall(user);
+
+    byte[] expected = "스 ".getBytes(Charset.forName("utf-8"));
+    assertEquals(4, result.length);
+    assertArrayEquals(expected, result);
+}
+```
+
+인코딩을 EUC-KR으로 변경하고 "스미스"라는 같은 문자열에 대해서 테스트를 진행해보겠습니다.
+
+```java
+@BeforeEach
+void setUp() {
+    marshallManager = MarshallFactory.builder().converter(ConverterType.EUC_KR).build();
+}
+```
+
+EUC-KR 인코딩에서 한글은 2바이트를 차지합니다. length 속성 값이 4이므로 첫 두 글자 "스미"를 4바이트로 온전히 표현할 수 있습니다.
+
+```java
+@Test
+void euckr_kor_test() {
+
+    User user = new User("스미스");
+    byte[] result = marshallManager.marshall(user);
+
+    byte[] expected = "스미".getBytes(Charset.forName("EUC-KR"));
+
+    assertEquals(4, result.length);
+    assertArrayEquals(expected, result);
+}
+```
+
+
+#### 3.2.2 Unmarshall 테스트
+unmarshalling의 경우 어떻게 되는지 테스트 해보겠습니다. 테스트에 사용될 UnMarshaller객체를 utf-8 인코딩을 사용하여 생성합니다.
+
+```java
+public class EncodingTest {
+
+	private UnMarshallManager unMarshallManager;
+
+    @BeforeEach
+    void setUp() {
+		unMarshallManager = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
+    }
+
+    // @Test Method......
+}
+```
+
+name필드에 @StringValue을 선언하고 length 속성 값을 4로 지정합니다. 
+
+```java
+@StringValue(order = 1, length = 4)
+private String name;
+```
+"Smith" 문자열을 길이가 5인 바이트 배열로 변환한 후, unmarshlling하면 User 객체의 name 필드에는 길이가 4인 "Smit" 문자열이 저장됩니다.
+
+```java
+@Test
+void utf8_english_test() {
+	byte[] input = "Smith".getBytes(Charset.forName("utf-8"));
+	User user = unMarshallManager.unmarshall(input, User.class);
+	assertEquals("Smit", user.getName());
+}
+```
+
+UTF-8인코딩에서 "스미스" 문자열은 9바이트입니다. name필드에는 총 4바이트만 할당할 수 있으므로 '스' 한 글자만 할당할 수 있습니다. marshalling과 달리 문자를 온전히 표현할 수 없다면 length 속성 값보다 작은 바이트가 필드에 할당 될 수 있습니다. 아래 테스트 코드에서는 '스' 문자 뒤에 공백이 붙지 않은 것에 주목하세요.
+
+```java
+@Test
+void utf8_kor_test() {
+	byte[] input = "스미스".getBytes(Charset.forName("utf-8"));
+	User user = unMarshallManager.unmarshall(input, User.class);
+	assertEquals("스", user.getName());
+}
+```
+
+인코딩을 EUC-KR으로 변경하고 "스미스"라는 같은 문자열에 대해서 테스트를 진행해보겠습니다.
+
+```java
+@BeforeEach
+void setUp() {
+	unMarshallManager = UnMarshallFactory.builder().converter(ConverterType.EUC_KR).build();
+}
+```
+
+EUC-KR인코딩에서 "스미스" 문자열은 6바이트입니다. name 필드에 4바이트인 "스미" 두 글자를 할당할 수 있습니다.
+
+```java
+@Test
+void euckr_kor_test() {
+	byte[] input = "스미스".getBytes(Charset.forName("euc-kr"));
+	User user = unMarshallManager.unmarshall(input, User.class);
+	assertEquals("스미", user.getName());
+}
+```
+

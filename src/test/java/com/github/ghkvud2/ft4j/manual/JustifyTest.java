@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.Charset;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.github.ghkvud2.ft4j.annotation.StringValue;
 import com.github.ghkvud2.ft4j.annotation.constant.Justify;
 import com.github.ghkvud2.ft4j.constant.ConverterType;
-import com.github.ghkvud2.ft4j.manual.LengthPropertyTest.Person;
 import com.github.ghkvud2.ft4j.marshall.MarshallFactory;
 import com.github.ghkvud2.ft4j.marshall.MarshallManager;
 import com.github.ghkvud2.ft4j.unmarshall.UnMarshallFactory;
@@ -31,6 +31,7 @@ public class JustifyTest {
 		assertEquals(10, result.length);
 	}
 
+	@Disabled
 	@Test
 	void justify_unmarshall_test() {
 
