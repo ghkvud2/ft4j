@@ -1413,10 +1413,10 @@ public class EncodingTest {
 
 	private UnMarshallManager unMarshallManager;
 
-    @BeforeEach
-    void setUp() {
-		unMarshallManager = UnMarshallFactory.builder().converter(ConverterType.UTF_8).build();
-    }
+	@BeforeEach
+	void setUp() {
+		unMarshallManager = UnMarshallFactory.builder().converter(ConverterType.EUC_KR).build();
+	}
 
     // @Test Method......
 }
