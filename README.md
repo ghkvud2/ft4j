@@ -52,7 +52,7 @@ ft4j를 사용하기 위해서, `ft4j.jar`를 어플리케이션 클래스패스
 <dependency>
     <groupId>com.github.ghkvud2</groupId>
     <artifactId>ft4j</artifactId>
-    <version>1.1</version>
+    <version>1.4</version>
 </dependency>
 ```
 
