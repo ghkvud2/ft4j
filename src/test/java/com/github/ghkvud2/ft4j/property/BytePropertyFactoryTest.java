@@ -32,23 +32,23 @@ class BytePropertyFactoryTest {
 	void abstractBytesProperty_test() throws NoSuchFieldException, SecurityException {
 
 		field = obj.getClass().getDeclaredField("num1");
-		property = (AbstractProperty<Short>) propertyFactory.createProperty(obj, field);
+		property = (AbstractProperty<Short>) propertyFactory.createMarshallProperty(obj, field);
 		assertProperty(property, 3, "33", true, PaddingByte.ZERO, Justify.RIGHT, (short) 33);
 
 		field = obj.getClass().getDeclaredField("num2");
-		property = (AbstractProperty<Integer>) propertyFactory.createProperty(obj, field);
+		property = (AbstractProperty<Integer>) propertyFactory.createMarshallProperty(obj, field);
 		assertProperty(property, 4, "", false, PaddingByte.SPACE, Justify.RIGHT, 2);
 
 		field = obj.getClass().getDeclaredField("num3");
-		property = (AbstractProperty<Long>) propertyFactory.createProperty(obj, field);
+		property = (AbstractProperty<Long>) propertyFactory.createMarshallProperty(obj, field);
 		assertProperty(property, 5, "", false, PaddingByte.ZERO, Justify.LEFT, 3L);
 
 		field = obj.getClass().getDeclaredField("num4");
-		property = (AbstractProperty<Double>) propertyFactory.createProperty(obj, field);
+		property = (AbstractProperty<Double>) propertyFactory.createMarshallProperty(obj, field);
 		assertProperty(property, 6, "", false, PaddingByte.ZERO, Justify.RIGHT, 4.23);
 
 		field = obj.getClass().getDeclaredField("num5");
-		property = (AbstractProperty<Double>) propertyFactory.createProperty(obj, field);
+		property = (AbstractProperty<Double>) propertyFactory.createMarshallProperty(obj, field);
 		assertProperty(property, 7, "3.33", false, PaddingByte.ZERO, Justify.RIGHT, 3.33);
 
 	}

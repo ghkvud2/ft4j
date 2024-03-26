@@ -6,6 +6,8 @@ import com.github.ghkvud2.ft4j.property.AnnotationFieldProperty;
 
 public interface PropertyFactory {
 
-	AnnotationFieldProperty createProperty(Object obj, Field field);
+	AnnotationFieldProperty createMarshallProperty(Object obj, Field field);
+
+	AnnotationFieldProperty createUnmarshallProperty(Object obj, Field field);
 
 }

@@ -28,10 +28,14 @@ public abstract class AbstractProperty<T> implements AnnotationFieldProperty {
 		this.field = field;
 		init();
 	}
-
-	private void init() {
-		this.field.setAccessible(true);
-		this.annotation = field.getDeclaredAnnotation(getAnnotationType());
+	
+    private void init() {
+        this.field.setAccessible(true);
+        this.annotation = field.getDeclaredAnnotation(getAnnotationType());
+    }
+    
+	public void marshallInitialize() {
+		
 		this.generatedValue = field.getDeclaredAnnotation(GeneratedValue.class);
 
 		if (generatedValue != null) {

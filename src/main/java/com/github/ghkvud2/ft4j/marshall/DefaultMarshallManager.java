@@ -63,7 +63,7 @@ public class DefaultMarshallManager implements MarshallManager {
 			Class<?> fieldType = field.getType();
 
 			if (fieldType.isPrimitive() || fieldType.equals(String.class)) {
-				AnnotationFieldProperty property = propertyFactory.createProperty(obj, field);
+				AnnotationFieldProperty property = propertyFactory.createMarshallProperty(obj, field);
 				validatorManager.preValidate(property);
 				byte[] bytes = marshaller.marshall(property);
 				field.set(obj, property.getFieldValue());

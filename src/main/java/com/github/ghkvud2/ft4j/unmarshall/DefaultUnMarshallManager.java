@@ -50,7 +50,7 @@ public class DefaultUnMarshallManager implements UnMarshallManager {
 			Class<?> fieldType = field.getType();
 
 			if (fieldType.isPrimitive() || fieldType.equals(String.class)) {
-				AnnotationFieldProperty property = propertyFactory.createProperty(obj, field);
+				AnnotationFieldProperty property = propertyFactory.createUnmarshallProperty(obj, field);
 				offset = unMarshaller.unmarshall(property, offset, bytes);
 				field.set(obj, property.getFieldValue());
 			} else {

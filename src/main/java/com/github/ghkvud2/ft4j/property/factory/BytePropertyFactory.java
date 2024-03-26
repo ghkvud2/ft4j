@@ -14,9 +14,16 @@ import com.github.ghkvud2.ft4j.property.bytes.*;
 public class BytePropertyFactory implements PropertyFactory {
 
 	@Override
-	public AbstractProperty<?> createProperty(Object obj, Field field) {
-		return BytePropertyEnum.createProperty(obj, field);
+	public AbstractProperty<?> createMarshallProperty(Object obj, Field field) {
+		AbstractProperty<?> property = BytePropertyEnum.createProperty(obj, field);
+        property.marshallInitialize();
+        return property;
 	}
+	
+	@Override
+    public AbstractProperty<?> createUnmarshallProperty(Object obj, Field field) {
+        return BytePropertyEnum.createProperty(obj, field);
+    } 
 
 	enum BytePropertyEnum {
 
