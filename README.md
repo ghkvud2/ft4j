@@ -52,12 +52,12 @@ ft4j를 사용하기 위해서, `ft4j.jar`를 어플리케이션 클래스패스
 <dependency>
     <groupId>com.github.ghkvud2</groupId>
     <artifactId>ft4j</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
 </dependency>
 ```
 
 ```groovy
-implementation group: 'io.github.ghkvud2', name: 'ft4j', version: '1.1'
+implementation group: 'io.github.ghkvud2', name: 'ft4j', version: '1.5'
 ```
 
 ### 2.0.1 Marshall Simple Example
