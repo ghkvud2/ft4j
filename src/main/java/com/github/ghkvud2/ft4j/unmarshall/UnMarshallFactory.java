@@ -66,6 +66,9 @@ public class UnMarshallFactory {
 		case UTF_8:
 			this.converter = new Utf8CharsetConverter();
 			break;
+		case MS949:
+			this.converter = new MS949CharsetConverter();
+			break;
 		default:
 			throw new IllegalArgumentException("Invalid ConverterType.");
 		}
